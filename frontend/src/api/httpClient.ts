@@ -47,6 +47,16 @@ export function createHttpClient(baseUrl: string): ApiClient {
         message: 'Cannot reach the analysis server. Check that the backend is running.',
       });
     }
+    const isJson = (res.headers.get('content-type') ?? '').includes('application/json');
+    // A static host with no API behind /api (e.g. Vercel before the backend is deployed) answers
+    // 404/405 with an HTML page. Say so plainly instead of "Request failed".
+    if (!res.ok && !isJson && [404, 405, 501, 502, 503, 504].includes(res.status)) {
+      throw new ApiError(0, {
+        code: 'network',
+        message:
+          'The analysis server is not connected yet. The website is up, but the backend (AI models) is not deployed or not reachable.',
+      });
+    }
     if (!res.ok) {
       const err = await parseError(res);
       if (res.status === 401 && !path.startsWith('/api/auth/'))
@@ -55,7 +65,7 @@ export function createHttpClient(baseUrl: string): ApiClient {
     }
     if (res.status === 204) return undefined as T;
     // A static host without the API (e.g. Vercel with no /api rewrite) answers with index.html.
-    if (!(res.headers.get('content-type') ?? '').includes('application/json')) {
+    if (!isJson) {
       throw new ApiError(0, {
         code: 'network',
         message: 'The analysis server is not connected. Deploy the backend and point /api at it.',

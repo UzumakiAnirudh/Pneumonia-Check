@@ -1,50 +1,50 @@
 [
   {
-    "id": "normal_01",
+    "id": "normal_child",
     "label": "NORMAL",
-    "title": "Normal A",
-    "description": "Held-out test image (IM-0626-0001-0002.jpeg). Ground truth: Normal. Kermany et al., CC BY 4.0.",
-    "file": "normal_01.jpg",
+    "title": "Normal \u00b7 child",
+    "description": "Held-out test image. Ground truth: Normal. Source: Kermany et al., pediatric (CC BY 4.0).",
+    "file": "normal_child.jpg",
     "synthetic": false
   },
   {
-    "id": "normal_02",
+    "id": "normal_adult",
     "label": "NORMAL",
-    "title": "Normal B",
-    "description": "Held-out test image (IM-0277-0001.jpeg). Ground truth: Normal. Kermany et al., CC BY 4.0.",
-    "file": "normal_02.jpg",
+    "title": "Normal \u00b7 adult",
+    "description": "Held-out test image. Ground truth: Normal. Source: Shenzhen No.3 Hospital via US NLM, adult.",
+    "file": "normal_adult.jpg",
     "synthetic": false
   },
   {
-    "id": "bacterial_01",
+    "id": "bacterial_child",
     "label": "BACTERIAL",
-    "title": "Bacterial A",
-    "description": "Held-out test image (person464_bacteria_1974.jpeg). Ground truth: Bacterial. Kermany et al., CC BY 4.0.",
-    "file": "bacterial_01.jpg",
+    "title": "Bacterial \u00b7 child",
+    "description": "Held-out test image. Ground truth: Bacterial. Source: Kermany et al., pediatric (CC BY 4.0).",
+    "file": "bacterial_child.jpg",
     "synthetic": false
   },
   {
-    "id": "bacterial_02",
+    "id": "bacterial_adult",
     "label": "BACTERIAL",
-    "title": "Bacterial B",
-    "description": "Held-out test image (person471_bacteria_2006.jpeg). Ground truth: Bacterial. Kermany et al., CC BY 4.0.",
-    "file": "bacterial_02.jpg",
+    "title": "Bacterial \u00b7 adult",
+    "description": "Held-out test image. Ground truth: Bacterial. Source: Cohen et al. COVID-19 image data collection, adult (CC BY-NC-SA).",
+    "file": "bacterial_adult.jpg",
     "synthetic": false
   },
   {
-    "id": "viral_01",
+    "id": "viral_child",
     "label": "VIRAL",
-    "title": "Viral A",
-    "description": "Held-out test image (person1460_virus_2509.jpeg). Ground truth: Viral. Kermany et al., CC BY 4.0.",
-    "file": "viral_01.jpg",
+    "title": "Viral \u00b7 child",
+    "description": "Held-out test image. Ground truth: Viral. Source: Kermany et al., pediatric (CC BY 4.0).",
+    "file": "viral_child.jpg",
     "synthetic": false
   },
   {
-    "id": "viral_02",
+    "id": "viral_adult",
     "label": "VIRAL",
-    "title": "Viral B",
-    "description": "Held-out test image (person107_virus_197.jpeg). Ground truth: Viral. Kermany et al., CC BY 4.0.",
-    "file": "viral_02.jpg",
+    "title": "Viral \u00b7 adult",
+    "description": "Held-out test image. Ground truth: Viral. Source: Cohen et al. COVID-19 image data collection, adult (CC BY 3.0).",
+    "file": "viral_adult.jpg",
     "synthetic": false
   }
 ]

@@ -137,6 +137,23 @@ export interface HealthResponse {
   validator: { method: 'heuristic' | 'model'; loaded: boolean };
   calibration: { loaded: boolean; temperatures: Record<string, number> };
   history_enabled: boolean;
+  model_version?: { id: string; label: string } | null;
+  training?: TrainingStatus | null;
+}
+
+export interface TrainingStatus {
+  state:
+    'training' | 'evaluating' | 'comparing' | 'activated' | 'kept_previous' | 'failed' | string;
+  label: string;
+  percent: number;
+  epoch?: number | null;
+  epochs?: number | null;
+  active_version?: string | null;
+  new_version?: string | null;
+  description: string;
+  message: string;
+  started_at?: string | null;
+  updated_at?: string | null;
 }
 
 export interface SampleImage {

@@ -6,6 +6,7 @@ import { Logo } from '@/components/brand/Logo';
 import { NAV_ITEMS } from './nav';
 import { ApiStatus } from './ApiStatus';
 import { UserMenu } from './UserMenu';
+import { TrainingIndicator } from './TrainingStatus';
 import { useSettings } from '@/store/settingsStore';
 import { useIsDark } from '@/utils/theme';
 import { cn } from '@/utils/cn';
@@ -85,6 +86,7 @@ export function AppShell() {
           <NavList />
         </nav>
         <div className="space-y-3 border-t border-border px-3 py-3">
+          <TrainingIndicator />
           <UserMenu />
           <div className="flex items-center justify-between px-1">
             <ApiStatus />

@@ -104,3 +104,15 @@ def test_real_mode_without_weights_returns_503(tmp_path, sample_bytes):
         assert c.get("/api/health").json()["status"] == "degraded"
         r = _post(c, sample_bytes["normal_01"])
         assert r.status_code == 503 and r.json()["detail"]["code"] == "model_unavailable"
+
+
+def test_health_reports_training_status(tmp_path):
+    status = tmp_path / "training_status.json"
+    status.write_text(
+        '{"state": "training", "label": "Training Swin Transformer Stage 1", "percent": 55.0, "epoch": 4, "epochs": 10}'
+    )
+    with TestClient(create_app(make_settings(tmp_path, training_status_path=status))) as c:
+        t = c.get("/api/health").json()["training"]
+        assert t["state"] == "training" and t["percent"] == 55.0 and t["epoch"] == 4
+        status.write_text("not json")
+        assert c.get("/api/health").json()["training"] is None  # corrupt file never breaks health

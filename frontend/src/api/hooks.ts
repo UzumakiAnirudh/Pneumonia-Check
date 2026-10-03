@@ -13,7 +13,7 @@ export function useHealth() {
   return useQuery({
     queryKey: queryKeys.health,
     queryFn: api.health,
-    refetchInterval: 15_000,
+    refetchInterval: 10_000,
     retry: 1,
   });
 }

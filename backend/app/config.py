@@ -52,6 +52,8 @@ class Settings(BaseSettings):
     metrics_path: Path = BACKEND_DIR / "metrics" / "metrics.json"
     gallery_dir: Path = BACKEND_DIR / "metrics" / "gallery"
     samples_dir: Path = BACKEND_DIR / "samples"
+    training_status_path: Path = BACKEND_DIR.parent / "training" / "outputs" / "training_status.json"
+    """Live status written by training/watch_and_activate.py (shown in the app while retraining)."""
 
     # --- Accounts ---------------------------------------------------------
     session_days: int = 7

@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { StatusDot } from '@/components/ui/StatusDot';
 import { useApiStatus } from '@/components/layout/useApiStatus';
+import { TrainingPanel } from '@/components/layout/TrainingStatus';
 import { DEFAULT_THRESHOLD, useSettings, type ThemePreference } from '@/store/settingsStore';
 import type { ModelChoice } from '@/api/types';
 import { pct } from '@/utils/format';
@@ -108,6 +109,11 @@ export function SettingsPage() {
               </p>
             )}
           </Row>
+        </Card>
+
+        <Card className="p-5 sm:p-6">
+          <CardHeader title="Model version & training" className="mb-4" />
+          <TrainingPanel />
         </Card>
 
         <Card className="p-5 sm:p-6">

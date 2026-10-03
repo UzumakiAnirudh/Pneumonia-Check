@@ -44,8 +44,7 @@ export function createHttpClient(baseUrl: string): ApiClient {
     } catch {
       throw new ApiError(0, {
         code: 'network',
-        message:
-          'Cannot reach the analysis server. Check that the backend is running on port 8000.',
+        message: 'Cannot reach the analysis server. Check that the backend is running.',
       });
     }
     if (!res.ok) {
@@ -55,6 +54,13 @@ export function createHttpClient(baseUrl: string): ApiClient {
       throw err;
     }
     if (res.status === 204) return undefined as T;
+    // A static host without the API (e.g. Vercel with no /api rewrite) answers with index.html.
+    if (!(res.headers.get('content-type') ?? '').includes('application/json')) {
+      throw new ApiError(0, {
+        code: 'network',
+        message: 'The analysis server is not connected. Deploy the backend and point /api at it.',
+      });
+    }
     return (await res.json()) as T;
   }
 

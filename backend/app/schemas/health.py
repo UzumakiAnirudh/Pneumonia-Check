@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Literal
+from typing import Literal, Optional
 
 from pydantic import BaseModel
 
@@ -22,6 +22,25 @@ class CalibrationStatus(BaseModel):
     temperatures: dict[str, float]
 
 
+class ModelVersion(BaseModel):
+    id: str
+    label: str
+
+
+class TrainingStatus(BaseModel):
+    state: str
+    label: str = ""
+    percent: float = 0
+    epoch: Optional[int] = None
+    epochs: Optional[int] = None
+    active_version: Optional[str] = None
+    new_version: Optional[str] = None
+    description: str = ""
+    message: str = ""
+    started_at: Optional[str] = None
+    updated_at: Optional[str] = None
+
+
 class HealthResponse(BaseModel):
     status: Literal["ok", "degraded"]
     version: str
@@ -32,3 +51,5 @@ class HealthResponse(BaseModel):
     validator: ValidatorStatus
     calibration: CalibrationStatus
     history_enabled: bool
+    model_version: Optional[ModelVersion] = None
+    training: Optional[TrainingStatus] = None

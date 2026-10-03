@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from typing import Literal, Optional
 
 from fastapi import APIRouter, Depends, File, Form, Response, UploadFile
@@ -19,12 +20,33 @@ from app.schemas import (
     SampleImage,
     ValidationResult,
 )
-from app.schemas.health import CalibrationStatus, ValidatorStatus
+from app.schemas.health import CalibrationStatus, ModelVersion, TrainingStatus, ValidatorStatus
 from app.services.predictor import NotChestXrayError
 from app.services.preprocessing import ImageDecodeError
 from app.services.resources import load_metrics, load_samples
 
 router = APIRouter(prefix="/api")
+
+
+def _model_version(s: Services) -> ModelVersion | None:
+    """Which trained models are loaded, read from the metrics written alongside them."""
+    if s.provider.is_mock:
+        return ModelVersion(id="mock", label="Simulated models")
+    data = load_metrics(s.settings.metrics_path) or {}
+    name = data.get("dataset", {}).get("name", "")
+    if not name:
+        return None
+    if "adult" in name.lower():
+        return ModelVersion(id="v2", label="Version 2 · children + adults")
+    return ModelVersion(id="v1", label="Version 1 · children only")
+
+
+def _training_status(s: Services) -> TrainingStatus | None:
+    path = s.settings.training_status_path
+    try:
+        return TrainingStatus(**json.loads(path.read_text())) if path.exists() else None
+    except (ValueError, TypeError):
+        return None
 
 
 @router.get("/health", response_model=HealthResponse, tags=["system"])
@@ -42,6 +64,8 @@ def health(s: Services = Depends(get_services)) -> HealthResponse:
         validator=ValidatorStatus(method=s.validator.method, loaded=s.validator.learned is not None),  # type: ignore[arg-type]
         calibration=CalibrationStatus(loaded=s.temperatures.loaded, temperatures=s.temperatures.values),
         history_enabled=s.history is not None,
+        model_version=_model_version(s),
+        training=_training_status(s),
     )
 
 

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "normal_01",
+    "label": "NORMAL",
+    "title": "Normal A",
+    "description": "Held-out test image (IM-0626-0001-0002.jpeg). Ground truth: Normal. Kermany et al., CC BY 4.0.",
+    "file": "normal_01.jpg",
+    "synthetic": false
+  },
+  {
+    "id": "normal_02",
+    "label": "NORMAL",
+    "title": "Normal B",
+    "description": "Held-out test image (IM-0277-0001.jpeg). Ground truth: Normal. Kermany et al., CC BY 4.0.",
+    "file": "normal_02.jpg",
+    "synthetic": false
+  },
+  {
+    "id": "bacterial_01",
+    "label": "BACTERIAL",
+    "title": "Bacterial A",
+    "description": "Held-out test image (person464_bacteria_1974.jpeg). Ground truth: Bacterial. Kermany et al., CC BY 4.0.",
+    "file": "bacterial_01.jpg",
+    "synthetic": false
+  },
+  {
+    "id": "bacterial_02",
+    "label": "BACTERIAL",
+    "title": "Bacterial B",
+    "description": "Held-out test image (person471_bacteria_2006.jpeg). Ground truth: Bacterial. Kermany et al., CC BY 4.0.",
+    "file": "bacterial_02.jpg",
+    "synthetic": false
+  },
+  {
+    "id": "viral_01",
+    "label": "VIRAL",
+    "title": "Viral A",
+    "description": "Held-out test image (person1460_virus_2509.jpeg). Ground truth: Viral. Kermany et al., CC BY 4.0.",
+    "file": "viral_01.jpg",
+    "synthetic": false
+  },
+  {
+    "id": "viral_02",
+    "label": "VIRAL",
+    "title": "Viral B",
+    "description": "Held-out test image (person107_virus_197.jpeg). Ground truth: Viral. Kermany et al., CC BY 4.0.",
+    "file": "viral_02.jpg",
+    "synthetic": false
+  }
+]

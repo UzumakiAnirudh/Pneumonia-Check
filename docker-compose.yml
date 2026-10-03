@@ -1,0 +1,25 @@
+# One-command demo:  docker compose up --build   ->  http://localhost:8080
+services:
+  backend:
+    build: ./backend
+    environment:
+      USE_MOCK_MODELS: ${USE_MOCK_MODELS:-false}
+      CLASSIFICATION_MODE: ${CLASSIFICATION_MODE:-two_stage}
+      HISTORY_ENABLED: ${HISTORY_ENABLED:-true}
+      DATABASE_URL: sqlite:////data/history.db
+    volumes:
+      - ./backend/weights:/app/weights:ro   # trained weights
+      - ./backend/metrics:/app/metrics:ro
+      - history:/data
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+
+volumes:
+  history:

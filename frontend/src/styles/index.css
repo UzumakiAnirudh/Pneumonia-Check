@@ -1,0 +1,147 @@
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/600.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------------------
+ * Design tokens (RGB channels). Result colours keep the same hue in both
+ * themes; the *-ink variants are contrast-safe for text on surfaces.
+ * ------------------------------------------------------------------------- */
+@layer base {
+  /* .force-light re-declares the light tokens (used by the PDF report template). */
+  :root,
+  .force-light {
+    --bg: 245 248 251; /* #F5F8FB */
+    --surface: 255 255 255;
+    --surface-2: 238 243 248;
+    --border: 221 228 237;
+    --text: 26 35 51; /* #1A2333 */
+    --text-muted: 91 102 120; /* #5B6678 */
+
+    --primary: 30 90 168; /* #1E5AA8 */
+    --primary-light: 230 239 250; /* #E6EFFA */
+    --primary-text: 30 90 168;
+    --accent: 20 184 196; /* #14B8C4 */
+
+    --viewer: 11 18 32; /* #0B1220 */
+    --viewer-panel: 17 26 46; /* #111A2E */
+    --viewer-line: 36 50 78;
+
+    --normal: 34 160 107; /* #22A06B */
+    --normal-ink: 22 120 79;
+    --pneumonia: 214 69 69; /* #D64545 */
+    --pneumonia-ink: 178 52 52;
+    --bacterial: 224 123 36; /* #E07B24 */
+    --bacterial-ink: 168 88 18;
+    --viral: 122 90 248; /* #7A5AF8 */
+    --viral-ink: 91 63 214;
+    --warning: 224 168 0; /* #E0A800 */
+    --warning-ink: 133 99 0;
+
+    color-scheme: light;
+  }
+
+  .dark:not(.force-light) {
+    --bg: 9 14 24;
+    --surface: 17 25 41;
+    --surface-2: 24 34 55;
+    --border: 37 50 74;
+    --text: 228 234 242;
+    --text-muted: 150 162 183;
+
+    --primary: 47 111 192;
+    --primary-light: 22 42 72;
+    --primary-text: 124 172 236;
+    --accent: 34 200 212;
+
+    --normal-ink: 86 205 150;
+    --pneumonia-ink: 240 128 128;
+    --bacterial-ink: 242 162 96;
+    --viral-ink: 172 152 255;
+    --warning-ink: 242 201 76;
+
+    color-scheme: dark;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-bg font-sans text-body text-ink;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply tracking-tight text-ink;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-bg;
+  }
+
+  ::selection {
+    background: rgb(var(--accent) / 0.25);
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-card border border-border bg-surface shadow-soft;
+  }
+  .viewer-panel {
+    @apply rounded-card border border-viewer-line bg-viewer text-slate-200;
+  }
+  .num {
+    @apply font-mono tabular-nums;
+  }
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted;
+  }
+  .link {
+    @apply font-medium text-primary-text underline-offset-4 hover:underline;
+  }
+}
+
+@layer utilities {
+  .bg-grid {
+    background-image:
+      linear-gradient(rgb(var(--viewer-line) / 0.35) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--viewer-line) / 0.35) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  /* Jet colormap — must match cv2.COLORMAP_JET used by the backend. */
+  .bg-jet {
+    background-image: linear-gradient(
+      90deg,
+      #00007f 0%,
+      #0000ff 12.5%,
+      #007fff 25%,
+      #00ffff 37.5%,
+      #7fff7f 50%,
+      #ffff00 62.5%,
+      #ff7f00 75%,
+      #ff0000 87.5%,
+      #7f0000 100%
+    );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

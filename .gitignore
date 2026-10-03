@@ -1,0 +1,13 @@
+.DS_Store
+node_modules/
+dist/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+backend/data/
+backend/weights/*.pth
+backend/weights/*.json
+training/data/
+training/outputs/

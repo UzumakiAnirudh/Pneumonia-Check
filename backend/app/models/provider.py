@@ -15,7 +15,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
-from app.models.architectures import ARCHS
+from app.models.specs import ARCHS
 
 
 class ModelUnavailableError(RuntimeError):

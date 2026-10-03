@@ -122,6 +122,27 @@ python external_validate.py --name "RSNA Pneumonia Detection" --rsna-labels ... 
 python train_validator.py --data data/validator              # optional: learned CXR validator
 ```
 
+## Free online deployment (Vercel + Render, no Docker)
+
+| Part | Host | How |
+|---|---|---|
+| Website | **Vercel** | `vercel.json` builds `frontend/` and forwards `/api/*` to the backend |
+| Backend + AI models | **Render (free plan)** | `render.yaml` installs `backend/requirements-deploy.txt` (no PyTorch) and runs the ONNX models |
+
+The backend runs the models with **onnxruntime** instead of PyTorch so it fits the free 512 MB plan
+(about 350 MB in use). `training/export_onnx.py` writes `backend/weights/*.onnx`: DenseNet121 is exported
+exactly; Swin's matrix weights are stored in 8-bit (per-channel), which keeps each file under GitHub's
+100 MB limit — 99%+ of test predictions are identical to PyTorch and the AUC is unchanged. Grad-CAM is
+computed inside the ONNX graph with the exact closed-form gradient (verified against pytorch-grad-cam).
+
+One-time setup: render.com → sign in with GitHub → **New → Blueprint** → choose this repository → **Apply**.
+Render then redeploys automatically on every push. The free instance sleeps after ~15 minutes idle, so
+the first request after a pause takes about a minute.
+
+Accounts are stored in SQLite on the instance and reset when Render restarts it. To keep them, create a
+free Postgres database (e.g. neon.tech) and paste its connection string into the Render service's
+`DATABASE_URL` environment variable.
+
 ## Model weights
 
 The API loads trained files from `backend/weights/` (details in [`backend/weights/README.md`](backend/weights/README.md)):

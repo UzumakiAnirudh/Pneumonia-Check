@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 import numpy as np
 
 from app.config import Settings
-from app.models.architectures import ARCHS, TASK_CLASSES
+from app.models.specs import ARCHS, TASK_CLASSES
 from app.models.provider import InferenceOutput, ModelProvider
 from app.schemas.prediction import (
     Agreement,

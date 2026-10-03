@@ -8,6 +8,5 @@ __pycache__/
 .env
 backend/data/
 backend/weights/*.pth
-backend/weights/*.json
 training/data/
 training/outputs/

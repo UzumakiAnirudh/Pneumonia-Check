@@ -116,3 +116,9 @@ def test_health_reports_training_status(tmp_path):
         assert t["state"] == "training" and t["percent"] == 55.0 and t["epoch"] == 4
         status.write_text("not json")
         assert c.get("/api/health").json()["training"] is None  # corrupt file never breaks health
+
+
+def test_blank_database_url_falls_back_to_sqlite():
+    from app.config import Settings
+
+    assert Settings(_env_file=None, database_url="  ").database_url.startswith("sqlite:///")

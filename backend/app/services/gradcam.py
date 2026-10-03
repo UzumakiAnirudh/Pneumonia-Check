@@ -12,11 +12,13 @@ Side naming follows the radiological convention: the patient's right lung appear
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable
+from typing import TYPE_CHECKING, Callable
+
+if TYPE_CHECKING:
+    import torch
 
 import cv2
 import numpy as np
-import torch
 
 from app.services.lung_mask import estimate_lung_mask
 

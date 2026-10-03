@@ -1,0 +1,27 @@
+# Render Blueprint — free web service for the PneumoScan AI backend (no Docker, no PyTorch).
+# Render builds it straight from this GitHub repo and redeploys on every push to main.
+services:
+  - type: web
+    name: pneumonia-check-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements-deploy.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: MODEL_BACKEND
+        value: onnx
+      - key: USE_MOCK_MODELS
+        value: "false"
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: HISTORY_ENABLED
+        value: "true"
+      # Optional: a free hosted Postgres (e.g. Neon) keeps accounts/history across restarts.
+      # Without it, accounts are stored in SQLite on the free instance and reset when it restarts.
+      - key: DATABASE_URL
+        sync: false

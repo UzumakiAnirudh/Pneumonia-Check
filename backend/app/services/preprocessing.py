@@ -15,11 +15,13 @@ from __future__ import annotations
 import base64
 import io
 from dataclasses import asdict, dataclass
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    import torch
 
 import cv2
 import numpy as np
-import torch
 from PIL import Image, ImageOps, UnidentifiedImageError
 
 IMAGENET_MEAN = (0.485, 0.456, 0.406)
@@ -218,8 +220,18 @@ def prepare_uint8(gray: np.ndarray, cfg: PreprocessConfig = PreprocessConfig()) 
     return resized
 
 
+def to_model_array(img_uint8: np.ndarray) -> np.ndarray:
+    """uint8 (H, W) grayscale -> normalised float32 array (3, H, W). NumPy-only twin of to_model_tensor."""
+    x = np.repeat((img_uint8.astype(np.float32) / 255.0)[None], 3, axis=0)
+    mean = np.asarray(IMAGENET_MEAN, dtype=np.float32)[:, None, None]
+    std = np.asarray(IMAGENET_STD, dtype=np.float32)[:, None, None]
+    return (x - mean) / std
+
+
 def to_model_tensor(img_uint8: np.ndarray) -> torch.Tensor:
     """uint8 (H, W) grayscale -> normalised float tensor (3, H, W)."""
+    import torch
+
     x = torch.from_numpy(img_uint8.astype(np.float32) / 255.0)
     x = x.unsqueeze(0).repeat(3, 1, 1)
     mean = torch.tensor(IMAGENET_MEAN).view(3, 1, 1)
@@ -234,6 +246,8 @@ def preprocess(gray: np.ndarray, cfg: PreprocessConfig = PreprocessConfig()) -> 
 
 def validator_tensor(rgb: np.ndarray, size: int = 224) -> torch.Tensor:
     """Input for the learned CXR validator: colour is kept (photos are a key negative class)."""
+    import torch
+
     resized = cv2.resize(rgb, (size, size), interpolation=cv2.INTER_AREA).astype(np.float32) / 255.0
     x = torch.from_numpy(resized).permute(2, 0, 1)
     mean = torch.tensor(IMAGENET_MEAN).view(3, 1, 1)

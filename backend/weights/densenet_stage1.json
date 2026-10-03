@@ -1,0 +1,49 @@
+{
+  "arch": "densenet",
+  "timm_name": "densenet121",
+  "task": "stage1",
+  "classes": [
+    "NORMAL",
+    "PNEUMONIA"
+  ],
+  "preprocess": {
+    "image_size": 224,
+    "use_clahe": true,
+    "clahe_clip_limit": 2.0,
+    "clahe_tile_grid": 8
+  },
+  "augment": {
+    "rotation_deg": 7.0,
+    "zoom": [
+      0.92,
+      1.08
+    ],
+    "translate": 0.04,
+    "brightness": 0.1,
+    "contrast": 0.1,
+    "hflip": false
+  },
+  "best_epoch": 5,
+  "best_val_auc": 0.99678,
+  "hyperparameters": {
+    "arch": "densenet",
+    "task": "stage1",
+    "epochs": 10,
+    "batch_size": 32,
+    "lr": 0.0001,
+    "weight_decay": 0.0001,
+    "warmup_epochs": 0.5,
+    "patience": 4,
+    "image_size": 224,
+    "no_clahe": false,
+    "hflip": false,
+    "no_pretrained": false,
+    "no_class_weights": false,
+    "workers": 0,
+    "log_every": 0,
+    "cache": true,
+    "device": "auto",
+    "seed": 42,
+    "limit": 0
+  }
+}

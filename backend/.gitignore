@@ -5,5 +5,4 @@ __pycache__/
 .env
 data/
 weights/*.pth
-weights/*.json
 !weights/README.md

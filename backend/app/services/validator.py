@@ -14,10 +14,10 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
 import cv2
 import numpy as np
-import torch
 
 from app.services.lung_mask import template_mask
 from app.services.preprocessing import LoadedImage, validator_tensor
@@ -156,8 +156,9 @@ class LearnedValidator:
 
     method = "model"
 
-    def __init__(self, weights_path: Path, device: torch.device, threshold: float = 0.5) -> None:
+    def __init__(self, weights_path: Path, device: Any, threshold: float = 0.5) -> None:
         import timm
+        import torch
 
         self.device = device
         self.threshold = threshold
@@ -167,9 +168,11 @@ class LearnedValidator:
         self.model.load_state_dict({k.removeprefix("module."): v for k, v in state.items()})
         self.model.eval().to(device)
 
-    @torch.no_grad()
     def validate(self, img: LoadedImage) -> tuple[bool, float, list[str]]:
-        logits = self.model(validator_tensor(img.rgb).to(self.device))
+        import torch
+
+        with torch.no_grad():
+            logits = self.model(validator_tensor(img.rgb).to(self.device))
         p_cxr = float(torch.softmax(logits, dim=1)[0, 0])
         reasons = [] if p_cxr >= self.threshold else ["The input validator classified this image as not a chest X-ray."]
         return p_cxr >= self.threshold, p_cxr, reasons
@@ -181,7 +184,7 @@ class ImageValidator:
     def __init__(
         self,
         weights_path: Path | None,
-        device: torch.device,
+        device: Any = None,
         threshold: float = 0.5,
         min_resolution: int = 128,
         warn_resolution: int = 512,

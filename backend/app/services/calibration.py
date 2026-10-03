@@ -10,9 +10,12 @@ from __future__ import annotations
 import json
 import logging
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import torch
 
 import numpy as np
-import torch
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +40,8 @@ def fit_temperature(
     The result is clamped to [0.05, 20]: values outside that range mean the validation set is
     too small or perfectly separated, and would make probabilities degenerate.
     """
+    import torch
+
     logits_t = torch.as_tensor(np.asarray(logits), dtype=torch.float64)
     labels_t = torch.as_tensor(np.asarray(labels), dtype=torch.long)
     log_t = torch.zeros(1, dtype=torch.float64, requires_grad=True)

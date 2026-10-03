@@ -6,6 +6,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BACKEND_DIR = Path(__file__).resolve().parent.parent
@@ -24,6 +25,8 @@ class Settings(BaseSettings):
     """Development/testing only: MockModelProvider generates simulated outputs without weights."""
     classification_mode: Literal["two_stage", "three_class"] = "two_stage"
     weights_dir: Path = BACKEND_DIR / "weights"
+    model_backend: Literal["auto", "torch", "onnx"] = "auto"
+    """auto: PyTorch if installed and .pth weights exist, else ONNX (lightweight deployments)."""
     device: str = "auto"
     """'auto', 'cpu', 'cuda' or 'mps'."""
     mock_latency_ms: int = 150
@@ -68,6 +71,12 @@ class Settings(BaseSettings):
         "http://localhost:4173",
         "http://localhost:8080",
     ]
+
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def _default_database(cls, v: object) -> object:
+        # An empty value (e.g. an unset optional env var on a host) means "use the local SQLite file".
+        return f"sqlite:///{BACKEND_DIR / 'data' / 'history.db'}" if v is None or str(v).strip() == "" else v
 
     @property
     def max_upload_bytes(self) -> int:

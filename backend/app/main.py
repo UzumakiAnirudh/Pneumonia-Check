@@ -18,7 +18,6 @@ from app.api.auth_routes import router as auth_router
 from app.api.routes import router
 from app.config import Settings, get_settings
 from app.models.factory import create_provider
-from app.models.real_provider import resolve_device
 from app.services.calibration import TemperatureStore
 from app.db import make_engine
 from app.services.auth import AuthService
@@ -31,11 +30,10 @@ logger = logging.getLogger("pneumoscan")
 
 
 def build_services(settings: Settings) -> Services:
-    device = resolve_device(settings.device)
-    provider = create_provider(settings, device)
+    provider = create_provider(settings)
     validator = ImageValidator(
         settings.weights_dir / "validator.pth",
-        device,
+        getattr(provider, "device", None),
         threshold=settings.validator_threshold,
         min_resolution=settings.min_resolution,
         warn_resolution=settings.warn_resolution,

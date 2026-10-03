@@ -1,0 +1,14 @@
+# Lightweight production install (no PyTorch): runs the exported ONNX models.
+# Used by render.yaml. Local development/training uses requirements.txt instead.
+fastapi>=0.110
+uvicorn[standard]>=0.29
+python-multipart>=0.0.9
+pydantic>=2.6
+pydantic-settings>=2.2
+sqlmodel>=0.0.16
+psycopg2-binary>=2.9
+onnxruntime>=1.17
+opencv-python-headless>=4.9
+pillow>=10.2
+numpy>=1.26,<3
+pydicom>=2.4

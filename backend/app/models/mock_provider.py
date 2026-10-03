@@ -19,7 +19,7 @@ import time
 import cv2
 import numpy as np
 
-from app.models.architectures import ARCHS, TASK_CLASSES
+from app.models.specs import ARCHS, TASK_CLASSES
 from app.models.provider import InferenceOutput, ModelInfo, ModelProvider
 from app.services.lung_mask import template_mask
 from app.services.preprocessing import PreprocessConfig, prepare_uint8

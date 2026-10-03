@@ -14,39 +14,17 @@ from typing import Callable, Literal
 import torch
 from torch import nn
 
-Arch = Literal["densenet", "swin"]
-Task = Literal["stage1", "stage2", "three_class"]
-
-TASK_CLASSES: dict[str, list[str]] = {
-    "stage1": ["NORMAL", "PNEUMONIA"],
-    "stage2": ["BACTERIAL", "VIRAL"],
-    "three_class": ["NORMAL", "BACTERIAL", "VIRAL"],
-}
-
-
-@dataclass(frozen=True)
-class ArchSpec:
-    key: str
-    display_name: str
-    timm_name: str
-    target_layer: str
-    """Dotted module path used as the Grad-CAM target."""
-
-
-ARCHS: dict[str, ArchSpec] = {
-    "densenet": ArchSpec(
-        key="densenet",
-        display_name="DenseNet121",
-        timm_name="densenet121",
-        target_layer="features.denseblock4",  # output of the last dense block (7x7x1024)
-    ),
-    "swin": ArchSpec(
-        key="swin",
-        display_name="Swin Transformer (Tiny)",
-        timm_name="swin_tiny_patch4_window7_224",
-        target_layer="norm",  # final-stage LayerNorm (7x7x768 tokens)
-    ),
-}
+from app.models.specs import (  # noqa: F401  (re-exported)
+    ARCHS,
+    TASK_CLASSES,
+    Arch,
+    ArchSpec,
+    Task,
+    metadata_filename,
+    onnx_filename,
+    read_metadata,
+    weights_filename,
+)
 
 
 def build_model(arch: str, num_classes: int, pretrained: bool = False, **kwargs) -> nn.Module:
@@ -80,27 +58,9 @@ def reshape_transform_for(arch: str) -> Callable[[torch.Tensor], torch.Tensor] |
     return swin_reshape_transform if arch == "swin" else None
 
 
-def weights_filename(arch: str, task: str) -> str:
-    return f"{arch}_{task}.pth"
-
-
-def metadata_filename(arch: str, task: str) -> str:
-    return f"{arch}_{task}.json"
-
-
 def load_state_dict(path: Path) -> dict[str, torch.Tensor]:
     """Load a checkpoint saved as a raw state_dict or ``{"state_dict": ...}``; strips DDP prefixes."""
     obj = torch.load(path, map_location="cpu", weights_only=True)
     if isinstance(obj, dict) and "state_dict" in obj and isinstance(obj["state_dict"], dict):
         obj = obj["state_dict"]
     return {k.removeprefix("module."): v for k, v in obj.items()}
-
-
-def read_metadata(weights_dir: Path, arch: str, task: str) -> dict:
-    path = weights_dir / metadata_filename(arch, task)
-    if path.exists():
-        try:
-            return json.loads(path.read_text())
-        except ValueError:
-            return {}
-    return {}

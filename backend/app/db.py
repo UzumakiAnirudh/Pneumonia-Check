@@ -10,9 +10,13 @@ from sqlmodel import SQLModel, create_engine
 
 def make_engine(database_url: str) -> Engine:
     """Create the engine, create tables, and apply small additive migrations."""
+    if database_url.startswith("postgres://"):
+        database_url = "postgresql://" + database_url.removeprefix("postgres://")  # Heroku/Neon style URLs
     if database_url.startswith("sqlite:///"):
         Path(database_url.removeprefix("sqlite:///")).parent.mkdir(parents=True, exist_ok=True)
-    engine = create_engine(database_url, connect_args={"check_same_thread": False})
+        engine = create_engine(database_url, connect_args={"check_same_thread": False})
+    else:
+        engine = create_engine(database_url, pool_pre_ping=True)  # e.g. a free hosted Postgres
     # Import table models so they are registered on SQLModel.metadata.
     from app.services import auth, history  # noqa: F401
 

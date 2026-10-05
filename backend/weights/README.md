@@ -1,5 +1,10 @@
 # Model weights
 
+The repository ships the four models as **ONNX** files (`*.onnx`, made by `training/export_onnx.py`),
+which the backend runs without PyTorch. Training produces PyTorch `*.pth` files (not committed —
+the Swin files exceed GitHub's 100 MB limit); with PyTorch installed and `.pth` present, the backend
+uses those instead (`MODEL_BACKEND=auto`).
+
 Trained weights loaded by the API (`USE_MOCK_MODELS=false`, the default).
 
 | File | Produced by | Purpose |

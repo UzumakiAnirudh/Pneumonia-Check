@@ -14,7 +14,8 @@ cam = ReLU(sum_c alpha_c * A_c) for the arg-max class — identical to pytorch-g
 (verified against it by --verify). Each exported model outputs (logits, cam_7x7).
 
 Writes backend/weights/<arch>_<task>.onnx next to the .pth files. Swin's MatMul weights are
-quantized to int8 (per-channel) by default — 99%+ identical labels, same AUC so every file is < 100 MB.
+quantized to 8-bit (per-channel, unsigned — avoids the int8 saturation
+issue of onnxruntime's AVX2 kernels on x86 servers) by default — 99%+ identical labels, same AUC so every file is < 100 MB.
 
 Example:
     python export_onnx.py --verify
@@ -144,7 +145,7 @@ def main() -> None:
                 tmp = out.with_suffix(".fp32.onnx")
                 out.replace(tmp)
                 quantize_dynamic(
-                    str(tmp), str(out), weight_type=QuantType.QInt8, op_types_to_quantize=["MatMul"], per_channel=True
+                    str(tmp), str(out), weight_type=QuantType.QUInt8, op_types_to_quantize=["MatMul"], per_channel=True
                 )
                 tmp.unlink()
             size = out.stat().st_size / 1e6

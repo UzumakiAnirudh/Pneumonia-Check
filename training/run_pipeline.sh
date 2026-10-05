@@ -3,7 +3,8 @@
 # per population), Grad-CAM gallery, external validation, and export real example X-rays.
 #
 # Uses data/splits_combined.csv (pediatric + adult; build it with prepare_adult.py) when present,
-# otherwise the pediatric-only data/splits.csv.
+# otherwise the pediatric-only data/splits.csv. To reproduce the deployed Version 1 models exactly:
+#   SPLITS=data/splits.csv bash run_pipeline.sh --epochs 10 --patience 4 --warmup-epochs 0.5
 # Usage: bash run_pipeline.sh [extra train.py args, e.g. --epochs 10]
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -31,4 +32,5 @@ if [ -f data/external/actualmed.csv ]; then
     --csv data/external/actualmed.csv --cache --workers 0
 fi
 echo "=== export samples ==="; $PY export_samples.py --splits "$SPLITS"
+echo "=== export onnx ===";    $PY export_onnx.py      # lightweight models for the free online backend
 echo "=== PIPELINE DONE ==="

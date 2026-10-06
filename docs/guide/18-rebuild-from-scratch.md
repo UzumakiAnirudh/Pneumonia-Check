@@ -1,6 +1,6 @@
-# Chapter 12 — Rebuild everything from scratch
+# Chapter 18 — Rebuild everything from scratch
 
-[← Chapter 11](11-frontend-walkthrough.md) · [README](../../README.md) · Next: [Chapter 13 →](13-deployment.md)
+[← Chapter 17](17-frontend-walkthrough.md) · [README](../../README.md) · Next: [Chapter 19 →](19-docker.md)
 
 This is a recipe to recreate the whole project in an **empty folder**, in an order where every step
 can be tested before moving on. Each phase lists what to build, the essential code, a **checkpoint**
@@ -93,7 +93,7 @@ Then add DICOM support, 16-bit images and DICOM de-identification. Reference:
 ## Phase 3 — Data
 
 Copy `training/download_data.py` and `training/prepare_data.py` (or write them following
-[Chapter 8](08-data.md)): download Kermany, parse labels from file names, remove duplicates by MD5,
+[Chapter 13](13-data.md)): download Kermany, parse labels from file names, remove duplicates by MD5,
 split 70/15/15 **grouped by patient** with `StratifiedGroupKFold`.
 
 ```bash
@@ -103,7 +103,7 @@ python download_data.py kermany
 python prepare_data.py --data-root data/raw/chest_xray
 ```
 
-**Checkpoint:** `data/splits.csv` exists with ~5,824 rows; the printed table matches Chapter 8.5; no
+**Checkpoint:** `data/splits.csv` exists with ~5,824 rows; the printed table matches Chapter 13.5; no
 patient ID appears in two splits.
 
 ---
@@ -144,7 +144,7 @@ opt = torch.optim.AdamW(model.parameters(), lr=1e-4, weight_decay=1e-4)
 for epoch in range(3):
     model.train()
     for x, y in train:
-        x, y = x.to(device), y.to(device)      # NOTE: no non_blocking=True on Apple MPS (Chapter 15)
+        x, y = x.to(device), y.to(device)      # NOTE: no non_blocking=True on Apple MPS (Chapter 22)
         opt.zero_grad()
         loss = loss_fn(model(x), y)
         loss.backward()
@@ -271,11 +271,11 @@ export default function App() {
 
 ## Phase 10 — Tests, quality, export, deployment
 
-1. Tests: pytest (`backend/tests/`), Vitest (`frontend/src/__tests__/`) — [Chapter 14](14-testing-and-quality.md).
+1. Tests: pytest (`backend/tests/`), Vitest (`frontend/src/__tests__/`) — [Chapter 21](21-testing-and-quality.md).
 2. `training/export_onnx.py` + `app/models/onnx_provider.py` — the PyTorch-free path.
-3. `vercel.json`, `render.yaml`, `backend/requirements-deploy.txt` — [Chapter 13](13-deployment.md).
+3. `vercel.json`, `render.yaml`, `backend/requirements-deploy.txt` — [Chapter 20](20-hosting-and-rehosting.md).
 
-**Final checkpoint:** your rebuilt app reaches the numbers in [Chapter 15](15-results-and-lessons.md)
+**Final checkpoint:** your rebuilt app reaches the numbers in [Chapter 22](22-results-and-lessons.md)
 within about ±0.005 AUC, and every test passes.
 
 ---
@@ -284,10 +284,10 @@ within about ±0.005 AUC, and every test passes.
 
 | Experience             | Running the existing project | Rebuilding from scratch                                |
 | ---------------------- | ---------------------------- | ------------------------------------------------------ |
-| Never coded            | an afternoon (Chapters 1–2)  | several weeks, working through Chapters 4–11 alongside |
+| Never coded            | an afternoon (Chapters 1–2)  | several weeks, working through Chapters 4–17 alongside |
 | Some Python/JavaScript | 30 minutes                   | 1–2 weeks                                              |
 | Experienced developer  | 10 minutes                   | 2–4 days                                               |
 
 ---
 
-Next: put it on the internet for free → [Chapter 13](13-deployment.md)
+Next: **Chapter 19 — Docker from zero** → [19-docker.md](19-docker.md)

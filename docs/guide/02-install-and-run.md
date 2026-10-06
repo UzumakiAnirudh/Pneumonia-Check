@@ -49,8 +49,8 @@ pip install -r requirements-deploy.txt
 | File                      | Size              | Contains                                       | Use it to                                                                   |
 | ------------------------- | ----------------- | ---------------------------------------------- | --------------------------------------------------------------------------- |
 | `requirements-deploy.txt` | ~400 MB           | FastAPI, OpenCV, **ONNX Runtime**              | **Run the app** with the models already in `backend/weights/` (recommended) |
-| `requirements.txt`        | ~2–3 GB           | Everything above + **PyTorch**, timm, Grad-CAM | Train or re-export models (Chapter 9)                                       |
-| `requirements-dev.txt`    | same + test tools | `requirements.txt` + pytest, black             | Develop and run the automated tests (Chapter 14)                            |
+| `requirements.txt`        | ~2–3 GB           | Everything above + **PyTorch**, timm, Grad-CAM | Train or re-export models (Chapter 14)                                      |
+| `requirements-dev.txt`    | same + test tools | `requirements.txt` + pytest, black             | Develop and run the automated tests (Chapter 21)                            |
 
 ```bash
 # 4. Start the server
@@ -114,13 +114,13 @@ together automatically.
      onto the dark panel.
    - Press **Analyze**. A scan line sweeps the image while five steps tick off.
 4. **Results**
-   - **Stage 1** says NORMAL or PNEUMONIA with a _calibrated confidence_ (Chapter 5 explains
+   - **Stage 1** says NORMAL or PNEUMONIA with a _calibrated confidence_ (Chapter 10 explains
      calibration). If pneumonia, **Stage 2** says BACTERIAL or VIRAL.
    - The badge says **High confidence** or **Low confidence — recommend expert review**.
    - The **viewer** has four modes: _Original_, _Overlay_ (heatmap on the X-ray), _Heatmap_, _Side by
      side_. Use the opacity slider; zoom with the mouse wheel or `+`/`-`; drag to pan; `0` resets.
    - "**What the model looked at**" describes the hottest region in words and reports how much of
-     the attention fell inside the lungs (Chapter 7).
+     the attention fell inside the lungs (Chapter 12).
    - **Download Report (PDF)**, **Compare Models**, **Analyze Another**.
 5. **History** — your own past analyses (other accounts never see them). Search, filter, reopen,
    delete one or all.
@@ -157,10 +157,10 @@ restarts. Delete that file to start fresh.
 | `ModuleNotFoundError: No module named 'fastapi'`                         | The virtual environment is not active — run the `activate` command again, then retry                                                                                                                        |
 | `Address already in use` / `Port 5173 is in use`                         | Another program uses that port. Use different ports: `python -m uvicorn app.main:app --port 8010` and `VITE_PROXY_TARGET=http://localhost:8010 npm run dev -- --port 5180`, then open http://localhost:5180 |
 | Website says **"API offline"** or **"analysis server is not connected"** | The backend is not running, or is on a different port than the website expects (see the line above)                                                                                                         |
-| `/api/health` shows `"status":"degraded"`                                | Model files are missing from `backend/weights/` — re-download the project or see [Chapter 9](09-training-pipeline.md)                                                                                       |
+| `/api/health` shows `"status":"degraded"`                                | Model files are missing from `backend/weights/` — re-download the project or see [Chapter 14](14-training-pipeline.md)                                                                                      |
 | `npm install` fails                                                      | Check `node --version` is 20 or newer                                                                                                                                                                       |
 
-More in [Chapter 16 — Troubleshooting](16-troubleshooting-faq.md).
+More in [Chapter 23 — Troubleshooting](23-troubleshooting-faq.md).
 
 ## 2.7 Optional: Docker
 
@@ -169,4 +169,4 @@ http://localhost:8080 using `docker-compose.yml`. Docker is **not** required for
 
 ---
 
-Next, understand what happens inside when you press _Analyze_ → [Chapter 3](03-how-it-works.md)
+Next: **Chapter 3 — How the whole system works** → [03-how-it-works.md](03-how-it-works.md)

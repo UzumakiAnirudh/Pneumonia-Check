@@ -1,12 +1,12 @@
-# Chapter 11 — Frontend code walkthrough
+# Chapter 17 — Frontend code walkthrough
 
-[← Chapter 10](10-backend-walkthrough.md) · [README](../../README.md) · Next: [Chapter 12 →](12-rebuild-from-scratch.md)
+[← Chapter 16](16-backend-walkthrough.md) · [README](../../README.md) · Next: [Chapter 18 →](18-rebuild-from-scratch.md)
 
 The website lives in `frontend/`. Everything below is in `frontend/src/` unless stated otherwise.
 
 ---
 
-## 11.1 Configuration files (`frontend/`)
+## 17.1 Configuration files (`frontend/`)
 
 | File                              | Purpose                                                                                                                                               |
 | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -18,7 +18,7 @@ The website lives in `frontend/`. Everything below is in `frontend/src/` unless 
 | `index.html`                      | The one HTML page; also applies the saved dark/light theme before React starts (no flash)                                                             |
 | `.env.example`                    | `VITE_API_BASE_URL` (call a backend on another domain directly) and `VITE_PROXY_TARGET`                                                               |
 
-## 11.2 Start-up
+## 17.2 Start-up
 
 - **`main.tsx`** — renders `<App/>` inside the TanStack Query provider (`api/queryClient.ts`) and Framer
   Motion's config (respects "reduce motion" accessibility settings), and imports the global CSS.
@@ -27,7 +27,7 @@ The website lives in `frontend/`. Everything below is in `frontend/src/` unless 
   `<RequireAuth>`. The heavy chart page (`PerformancePage`) loads on demand. On start it calls
   `useAuth().bootstrap()` to check whether you are already logged in.
 
-## 11.3 Talking to the backend: `api/`
+## 17.3 Talking to the backend: `api/`
 
 - **`types.ts`** — TypeScript twins of the backend schemas (`PredictResponse`, `ModelResult`,
   `HealthResponse`, `MetricsResponse`, `AuthUser`, ...) plus the `ApiError` class.
@@ -40,7 +40,7 @@ The website lives in `frontend/`. Everything below is in `frontend/src/` unless 
 - **`hooks.ts`** — TanStack Query hooks: `useHealth` (refreshes every 10 s), `useMetrics`,
   `useSamples`, `useHistory`, `useHistoryItem`, `useDeleteHistoryItem`, `useClearHistory`.
 
-## 11.4 Shared state: `store/` and `features/auth/authStore.ts`
+## 17.4 Shared state: `store/` and `features/auth/authStore.ts`
 
 - **`settingsStore.ts`** (saved in the browser): theme, default model, confidence threshold
   (default 0.75), history on/off.
@@ -50,14 +50,14 @@ The website lives in `frontend/`. Everything below is in `frontend/src/` unless 
   `login`, `register`, `logout` — each clears cached history so nothing from one account is ever shown
   to the next; `safeNext()` only allows same-site redirects after login (prevents "open redirect" tricks).
 
-## 11.5 Layout: `components/layout/`
+## 17.5 Layout: `components/layout/`
 
 `AppShell.tsx` draws the sidebar (desktop) or top bar + menu (mobile), the navigation (`nav.ts`), the
 **training indicator** (`TrainingStatus.tsx` — live progress when models are being retrained), the
 **user menu** (`UserMenu.tsx` — initials, name, email, log-out), the API status dot (`ApiStatus.tsx`,
 `useApiStatus.ts`) and the theme toggle.
 
-## 11.6 Pages: `pages/`
+## 17.6 Pages: `pages/`
 
 | Page                                | What to look at in the code                                                                                                                                                                                                           |
 | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -70,7 +70,7 @@ The website lives in `frontend/`. Everything below is in `frontend/src/` unless 
 | `SettingsPage.tsx`                  | Preferences, **model version & training** panel, API status                                                                                                                                                                           |
 | `AboutPage.tsx`                     | Project, data, architecture diagrams, Grad-CAM, limitations, team (edit names in `config/project.ts`)                                                                                                                                 |
 
-## 11.7 The analysis flow: `features/analysis/`
+## 17.7 The analysis flow: `features/analysis/`
 
 - **`useRunAnalysis.ts`** — the heart of the Analyze button: validate → predict, animating the five
   steps (`steps.ts`) on a timer so short requests still feel smooth, then navigates to `/results`.
@@ -83,7 +83,7 @@ The website lives in `frontend/`. Everything below is in `frontend/src/` unless 
   "What the model looked at", model and timing.
 - **`ComparisonView.tsx`** + **`AgreementBanner.tsx`** — the side-by-side view.
 
-## 11.8 Viewer and UI building blocks
+## 17.8 Viewer and UI building blocks
 
 - `components/viewer/` — `ZoomPanImage.tsx` + `useZoomPan.ts` (wheel/drag/keyboard zoom and pan),
   `HeatmapLegend.tsx`, `ScanLine.tsx`.
@@ -96,7 +96,7 @@ The website lives in `frontend/`. Everything below is in `frontend/src/` unless 
 - `utils/labels.ts` — the single source of truth for how each class looks: text, icon and colour —
   results are **never shown by colour alone** (accessibility for colour-blind users).
 
-## 11.9 Styling and themes
+## 17.9 Styling and themes
 
 `styles/index.css` defines every colour twice — for light mode (`:root`) and dark mode (`.dark`) — as
 CSS variables (clinical blue `#1E5AA8`, cyan accent `#14B8C4`, green Normal, red Pneumonia, orange
@@ -104,7 +104,7 @@ Bacterial, violet Viral, amber warnings). Tailwind classes such as `bg-primary` 
 these variables, so switching theme is just toggling the `dark` class on `<html>` (`utils/theme.ts`).
 Chart colours were checked for colour-blind safety.
 
-## 11.10 Tests: `__tests__/`
+## 17.10 Tests: `__tests__/`
 
 22 Vitest tests: confidence bars and labels, reliability rules, the probability chart, keyboard
 navigation of segmented controls, the upload zone (accepts PNG, rejects other types), login redirects,
@@ -113,4 +113,4 @@ password rules, the open-redirect guard, and the "backend not connected" message
 
 ---
 
-Next: rebuild all of this yourself → [Chapter 12](12-rebuild-from-scratch.md)
+Next: **Chapter 18 — Rebuild everything from scratch** → [18-rebuild-from-scratch.md](18-rebuild-from-scratch.md)

@@ -1,6 +1,6 @@
-# Chapter 7 — Explainability: how the heatmaps work
+# Chapter 12 — Explainability: how the heatmaps work
 
-[← Chapter 6](06-densenet-and-swin.md) · [README](../../README.md) · Next: [Chapter 8 →](08-data.md)
+[← Chapter 11](11-densenet-and-swin.md) · [README](../../README.md) · Next: [Chapter 13 →](13-data.md)
 
 A prediction alone ("Pneumonia, 97%") asks a doctor for blind trust. A heatmap showing _where_ the
 model looked lets them check whether it focused on the lungs — or on a text marker, a tube, or the
@@ -12,7 +12,7 @@ Code: `backend/app/services/gradcam.py`, `backend/app/services/lung_mask.py`,
 
 ---
 
-## 7.1 The intuition
+## 12.1 The intuition
 
 The last convolutional/attention layer of each network produces a 7 × 7 grid of feature vectors (1024
 numbers per cell for DenseNet, 768 for Swin). Each channel is a "detector" for some pattern; each cell
@@ -26,7 +26,7 @@ Grad-CAM asks two questions:
 
 Multiply the two and add them up: you get a 7 × 7 map of "evidence for the predicted class".
 
-## 7.2 The formula (Selvaraju et al., 2017)
+## 12.2 The formula (Selvaraju et al., 2017)
 
 Let **A<sup>c</sup>** be the activation map of channel _c_ (7 × 7), and **S<sub>k</sub>** the score (logit) of
 the predicted class _k_.
@@ -49,7 +49,7 @@ the predicted class _k_.
 4. **Colouring**: map 0 → dark blue … 1 → dark red with the **JET colour map**, and blend it over the
    X-ray (45% opacity by default; adjustable in the viewer).
 
-## 7.3 Which layer, and why
+## 12.3 Which layer, and why
 
 | Model       | Target layer                              | Shape        | Why                                                     |
 | ----------- | ----------------------------------------- | ------------ | ------------------------------------------------------- |
@@ -59,7 +59,7 @@ the predicted class _k_.
 Swin outputs "channels last" (7, 7, 768) while Grad-CAM expects "channels first" (768, 7, 7), so a small
 **reshape transform** (`swin_reshape_transform` in `architectures.py`) swaps the axes.
 
-## 7.4 Grad-CAM without PyTorch: the closed-form trick
+## 12.4 Grad-CAM without PyTorch: the closed-form trick
 
 The online server uses **ONNX Runtime**, which can run a model but **cannot compute gradients**. Our
 solution: for these two networks, the layers between the target and the score are simple enough that
@@ -87,7 +87,7 @@ S_k = Σ_c W[k,c] · (1/49) Σ_{ij} ReLU(pre_c,ij) + b_k
 `--verify` option checks the result against `pytorch-grad-cam`: the difference is below 0.001% for the
 full-precision models. This is a nice example of using maths to remove a heavy dependency.
 
-## 7.5 Turning a heatmap into words
+## 12.5 Turning a heatmap into words
 
 `describe_attention()` in `gradcam.py`:
 
@@ -99,7 +99,7 @@ full-precision models. This is a nice example of using maths to remove a heavy d
 4. **Radiological convention:** X-rays are viewed as if facing the patient, so the **patient's right
    lung is on the left of the image**. The text always uses the _patient's_ side.
 
-## 7.6 The lung mask and the "attention inside lung region" check
+## 12.6 The lung mask and the "attention inside lung region" check
 
 `lung_mask.py` builds a simple mask without a segmentation network:
 
@@ -118,7 +118,7 @@ in-lung share is **below the lung area** (no better than chance), it warns that 
 on cues outside the lungs. Our models average ~33–38% inside the lungs on correct cases — about 1.4×
 chance — and lower on failures.
 
-## 7.7 The Grad-CAM gallery
+## 12.7 The Grad-CAM gallery
 
 `training/gradcam_analysis.py` runs Grad-CAM on up to 400 test images per model and sorts them into:
 
@@ -129,7 +129,7 @@ chance — and lower on failures.
 These appear on the Performance page. Looking at failures is the best way to understand a model's
 weaknesses.
 
-## 7.8 What Grad-CAM can and cannot tell you
+## 12.8 What Grad-CAM can and cannot tell you
 
 - ✔ It shows regions that _increased_ the predicted class's score.
 - ✘ It is **coarse**: a 7 × 7 grid stretched over the image; small lesions cannot be outlined precisely.
@@ -142,4 +142,4 @@ Use heatmaps as a **sanity check** and a teaching tool, never as a diagnosis.
 
 ---
 
-Next: where the data comes from → [Chapter 8](08-data.md)
+Next: **Chapter 13 — The data: sources, download, labels, splits, collecting your own** → [13-data.md](13-data.md)

@@ -1,13 +1,13 @@
-# Chapter 10 — Backend code walkthrough
+# Chapter 16 — Backend code walkthrough
 
-[← Chapter 9](09-training-pipeline.md) · [README](../../README.md) · Next: [Chapter 11 →](11-frontend-walkthrough.md)
+[← Chapter 15](15-train-from-scratch-step-by-step.md) · [README](../../README.md) · Next: [Chapter 17 →](17-frontend-walkthrough.md)
 
 Read this with the code open in VS Code. Files are presented in the order the server uses them when it
 starts and when it handles a request.
 
 ---
 
-## 10.1 Start-up: `app/main.py`
+## 16.1 Start-up: `app/main.py`
 
 `uvicorn app.main:app` imports `main.py`, which calls `create_app()`:
 
@@ -22,7 +22,7 @@ starts and when it handles a request.
    `app.state.services` so every request can reuse them (loading models is slow; doing it per request
    would be terrible).
 
-## 10.2 Settings: `app/config.py`
+## 16.2 Settings: `app/config.py`
 
 A `Settings` class (pydantic-settings) with one field per option — e.g. `use_mock_models`,
 `model_backend`, `classification_mode`, `weights_dir`, `image_size`, `use_clahe`, `default_threshold`,
@@ -30,13 +30,13 @@ A `Settings` class (pydantic-settings) with one field per option — e.g. `use_m
 by an environment variable with the same name in capitals (`DEFAULT_THRESHOLD=0.8`) or in `backend/.env`.
 An empty `DATABASE_URL` falls back to the SQLite file `backend/data/history.db`.
 
-## 10.3 Database: `app/db.py`
+## 16.3 Database: `app/db.py`
 
 `make_engine(url)` connects to SQLite (a local file) or PostgreSQL (`postgresql://...`), creates the
 tables, and runs small **migrations** — e.g. adding the `user_id` column to databases created before
 accounts existed (old rows without an owner become invisible rather than leaking).
 
-## 10.4 The API layer: `app/api/`
+## 16.4 The API layer: `app/api/`
 
 - **`deps.py`** — the `Services` container, `get_services()`, and `current_user()`: reads the session
   cookie, looks up the user, or answers **401**. Any endpoint that declares
@@ -52,7 +52,7 @@ accounts existed (old rows without an owner become invisible rather than leaking
   - `GET /api/metrics`, `GET /api/samples` — public dashboard data and examples;
   - `GET/DELETE /api/history[...]` — always scoped to the logged-in user.
 
-## 10.5 Data shapes: `app/schemas/`
+## 16.5 Data shapes: `app/schemas/`
 
 Pydantic classes that define every request and response: `prediction.py` (`ImageInfo`,
 `ValidationResult`, `StageResult`, `Reliability`, `Explanation`, `ModelResult`, `PredictResponse`),
@@ -60,7 +60,7 @@ Pydantic classes that define every request and response: `prediction.py` (`Image
 `samples.py`. FastAPI uses them to validate input, convert output to JSON, and generate `/docs`. The
 frontend mirrors them in `frontend/src/api/types.ts` — keep both in sync when you change one.
 
-## 10.6 Models: `app/models/`
+## 16.6 Models: `app/models/`
 
 | File               | What it contains                                                                                                                                                                             |
 | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -76,7 +76,7 @@ PyTorch is imported _lazily_ (only inside the functions that need it), so the se
 PyTorch not installed at all — a test (`tests/test_onnx.py`) blocks `import torch` and checks that
 registration and prediction still work.
 
-## 10.7 Services: `app/services/` — the real work
+## 16.7 Services: `app/services/` — the real work
 
 ### `preprocessing.py`
 
@@ -120,7 +120,7 @@ missing → T = 1).
 
 `compute_gradcam()` (PyTorch path), `normalize_cam()`, `colorize()` (JET), `blend()`,
 `describe_attention()` (zones, bilateral rule, patient-side naming, lung-attention vs lung-area), and the
-template + Otsu + convex-hull lung mask — all explained in Chapter 7.
+template + Otsu + convex-hull lung mask — all explained in Chapter 12.
 
 ### `auth.py`
 
@@ -142,13 +142,13 @@ reads `samples/samples.json`. `evaluation.py` computes every metric for the dash
 training scripts; metrics that are undefined for a dataset — e.g. sensitivity on a normals-only set —
 are stored as `null`, never as a misleading 0).
 
-## 10.8 Tests: `backend/tests/`
+## 16.8 Tests: `backend/tests/`
 
 57 automated tests covering preprocessing (including EXIF/DICOM privacy), the validator, calibration,
 Grad-CAM shapes and the radiological convention, the prediction logic, every API endpoint, accounts and
 **history isolation between users**, and the ONNX path. Synthetic X-ray "phantoms"
-(`tests/phantoms.py`) provide deterministic test images. Run: `cd backend && pytest` (Chapter 14).
+(`tests/phantoms.py`) provide deterministic test images. Run: `cd backend && pytest` (Chapter 21).
 
 ---
 
-Next: the website code → [Chapter 11](11-frontend-walkthrough.md)
+Next: **Chapter 17 — Frontend code walkthrough** → [17-frontend-walkthrough.md](17-frontend-walkthrough.md)

@@ -1,6 +1,6 @@
 # Chapter 1 — Computer basics (start here if you have never coded)
 
-[← Back to README](../../README.md) · Next: [Chapter 2 — Install and run →](02-install-and-run.md)
+[README](../../README.md) · Next: [Chapter 2 →](02-install-and-run.md)
 
 This chapter assumes **nothing**. If you already know what a terminal, Git and Python are, skip to
 [Chapter 2](02-install-and-run.md).
@@ -31,7 +31,7 @@ A **file extension** — the letters after the last dot — tells you the file t
 | ------------------------ | ----------------------------------------------------------------------------------- |
 | `.py`                    | Python code                                                                         |
 | `.ts`, `.tsx`            | TypeScript code (`.tsx` = TypeScript that also contains HTML-like markup for React) |
-| `.json`                  | Data in JSON format (see Chapter 4)                                                 |
+| `.json`                  | Data in JSON format (see Chapter 5.7)                                               |
 | `.md`                    | Markdown — formatted text, like this guide                                          |
 | `.png`, `.jpg`, `.jpeg`  | Images                                                                              |
 | `.pth`, `.onnx`          | Saved neural-network models                                                         |
@@ -188,8 +188,8 @@ ModuleNotFoundError: No module named 'fastapi'
 
 Read the **last line first**: it says what went wrong (here: a library is not installed — you
 probably forgot to activate the virtual environment, see Chapter 2). Copy that last line into a
-search engine or into [Chapter 16 — Troubleshooting](16-troubleshooting-faq.md).
+search engine or into [Chapter 23 — Troubleshooting](23-troubleshooting-faq.md).
 
 ---
 
-**You now know enough to install and run the project.** → [Chapter 2](02-install-and-run.md)
+Next: **Chapter 2 — Install and run the app** → [02-install-and-run.md](02-install-and-run.md)

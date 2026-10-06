@@ -1,13 +1,13 @@
-# Chapter 14 — Testing and code quality
+# Chapter 21 — Testing and code quality
 
-[← Chapter 13](13-deployment.md) · [README](../../README.md) · Next: [Chapter 15 →](15-results-and-lessons.md)
+[← Chapter 20](20-hosting-and-rehosting.md) · [README](../../README.md) · Next: [Chapter 22 →](22-results-and-lessons.md)
 
 An **automated test** is a small program that uses your code and checks the result. Run them after
 every change: if they still pass, you have not broken what already worked.
 
 ---
 
-## 14.1 Run everything
+## 21.1 Run everything
 
 ```bash
 # Backend — 57 tests (needs requirements-dev.txt)
@@ -27,7 +27,7 @@ npm run build                  # the production build must succeed
 All of these pass in the repository. If one fails after your change, read the failure message — it
 shows the expected and actual values and the line.
 
-## 14.2 What the backend tests check (`backend/tests/`)
+## 21.2 What the backend tests check (`backend/tests/`)
 
 | File                    | Checks                                                                                                                                                                                          |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -44,14 +44,14 @@ Tests use **synthetic phantoms** (`tests/phantoms.py` draws X-ray-like images wi
 simulated pneumonia) so they run anywhere without patient data, and a **temporary database**
 for each test.
 
-## 14.3 What the frontend tests check (`frontend/src/__tests__/`)
+## 21.3 What the frontend tests check (`frontend/src/__tests__/`)
 
 Confidence bar accessibility values; labels shown as text (not colour alone); reliability rules; the
 probability chart never invents a subtype for Normal results; keyboard navigation; the upload zone
 accepts PNG and rejects other files; logged-out users are redirected to login; post-login redirects
 cannot leave the site; password rules; clear messages when no backend is connected.
 
-## 14.4 Writing your own test
+## 21.4 Writing your own test
 
 Backend (pytest) — create `backend/tests/test_mine.py`:
 
@@ -73,13 +73,13 @@ it("formats percentages", () => {
 });
 ```
 
-## 14.5 Formatting and style
+## 21.5 Formatting and style
 
 - Python: **Black** (line length 120, configured in `pyproject.toml`) — run `black app tests`.
 - JavaScript/TypeScript: **Prettier** (`npm run format`) and **ESLint** (`npm run lint`).
 - Consistent formatting makes changes easy to review: a diff then shows only real changes.
 
-## 14.6 Checking the ML side
+## 21.6 Checking the ML side
 
 Tests cannot tell you whether a model is _good_. For that:
 
@@ -91,4 +91,4 @@ Tests cannot tell you whether a model is _good_. For that:
 
 ---
 
-Next: our real results and the lessons behind them → [Chapter 15](15-results-and-lessons.md)
+Next: **Chapter 22 — Results, lessons and how to improve** → [22-results-and-lessons.md](22-results-and-lessons.md)

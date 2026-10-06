@@ -1,7 +1,7 @@
 # Training & evaluation
 
-> New here? The step-by-step course is in [docs/guide](../docs/guide/09-training-pipeline.md) — start with
-> [Chapter 8 (data)](../docs/guide/08-data.md) and [Chapter 9 (training)](../docs/guide/09-training-pipeline.md).
+> New here? The step-by-step course is in [docs/guide](../docs/guide/14-training-pipeline.md) — start with
+> [Chapter 13 (data)](../docs/guide/13-data.md) and [Chapter 14 (training)](../docs/guide/14-training-pipeline.md).
 
 Scripts to train, calibrate and evaluate the PneumoScan AI models. They import preprocessing,
 model definitions, calibration and metric code directly from `backend/app`, so **inference

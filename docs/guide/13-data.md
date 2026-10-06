@@ -1,6 +1,6 @@
-# Chapter 8 — The data: sources, download, labels, splits, collecting your own
+# Chapter 13 — The data: sources, download, labels, splits, collecting your own
 
-[← Chapter 7](07-explainability-gradcam.md) · [README](../../README.md) · Next: [Chapter 9 →](09-training-pipeline.md)
+[← Chapter 12](12-explainability-gradcam.md) · [README](../../README.md) · Next: [Chapter 14 →](14-training-pipeline.md)
 
 A model is only as good as its data. This chapter lists every dataset we use, exactly how to get it
 (automatically or by hand), how labels are created, how the data is split without cheating, and how
@@ -8,7 +8,7 @@ you could collect a dataset of your own — properly and ethically.
 
 ---
 
-## 8.1 Overview
+## 13.1 Overview
 
 | Dataset                                             | Who / where                                                     | Patients          | What we use it for                                      | Licence                                      |
 | --------------------------------------------------- | --------------------------------------------------------------- | ----------------- | ------------------------------------------------------- | -------------------------------------------- |
@@ -19,9 +19,9 @@ you could collect a dataset of your own — properly and ethically.
 | **Actualmed** COVID-19 chest X-ray dataset          | Actualmed (Spain)                                               | Adults            | **Unseen-hospital test only** (127 normal, 58 COVID-19) | See the repository                           |
 
 The deployed models (Version 1) are trained **only on Kermany**. The adult datasets were used to
-measure adult performance and for the Version 2 experiment ([Chapter 15](15-results-and-lessons.md)).
+measure adult performance and for the Version 2 experiment ([Chapter 22](22-results-and-lessons.md)).
 
-## 8.2 Download everything automatically
+## 13.2 Download everything automatically
 
 From the `training/` folder, with Python available:
 
@@ -47,7 +47,7 @@ training/data/
     └── shenzhen_normal.csv
 ```
 
-## 8.3 Download by hand (if you prefer clicking)
+## 13.3 Download by hand (if you prefer clicking)
 
 1. **Kermany** — open https://data.mendeley.com/datasets/rscbjbr9sj/2 → download
    **ChestXRay2017.zip** (1.2 GB) → unzip it into `training/data/raw/` so that
@@ -64,7 +64,7 @@ training/data/
    Files ending in `_0.png` are **normal**, `_1.png` are tuberculosis (we do not use those). Easier:
    `python download_data.py shenzhen`.
 
-## 8.4 How labels are created
+## 13.4 How labels are created
 
 Kermany stores images in `NORMAL` and `PNEUMONIA` folders, and encodes the pneumonia type in the
 **file name**:
@@ -87,7 +87,7 @@ For the adult sets (`training/prepare_adult.py`):
 - **Figure1 / Actualmed**: `COVID-19` → VIRAL, `No finding` → NORMAL; frontal views only.
 - **Shenzhen**: all NORMAL.
 
-## 8.5 Cleaning and splitting (without cheating)
+## 13.5 Cleaning and splitting (without cheating)
 
 `python prepare_data.py --data-root data/raw/chest_xray` does:
 
@@ -118,7 +118,7 @@ the 54 adult bacterial images get a fair test share) into `data/splits_combined.
 with a `source` column), and writes `data/external/actualmed.csv` — the **unseen-hospital test set**
 that is never used for training.
 
-## 8.6 Collecting your own data (manually and ethically)
+## 13.6 Collecting your own data (manually and ethically)
 
 If you work with a hospital and want to build or extend a dataset:
 
@@ -136,7 +136,7 @@ If you work with a hospital and want to build or extend a dataset:
    - Record uncertainty ("indeterminate") rather than guessing.
 4. **Collect both classes from the same places.** Normal and pneumonia images should come from the same
    hospitals, machines and time periods — otherwise the model learns the _source_ instead of the
-   _disease_ (this exact mistake is analysed in [Chapter 15](15-results-and-lessons.md)).
+   _disease_ (this exact mistake is analysed in [Chapter 22](22-results-and-lessons.md)).
 5. **Organise** as a CSV the pipeline can read:
 
    ```
@@ -157,9 +157,9 @@ If you work with a hospital and want to build or extend a dataset:
 
    `python external_validate.py --name "My hospital" --csv that.csv` — the fairest test of all.
 
-## 8.7 Data for the input validator (optional)
+## 13.7 Data for the input validator (optional)
 
-The "is this a chest X-ray?" check currently uses rules (Chapter 10). To train a learned validator
+The "is this a chest X-ray?" check currently uses rules (Chapter 16). To train a learned validator
 (`training/train_validator.py`), create:
 
 ```
@@ -169,7 +169,7 @@ training/data/validator/
               other X-ray body parts (e.g. the MURA dataset — free registration), CT slices
 ```
 
-## 8.8 Bigger datasets for the future
+## 13.8 Bigger datasets for the future
 
 | Dataset                            | Size                   | Labels                                          | Access                                    |
 | ---------------------------------- | ---------------------- | ----------------------------------------------- | ----------------------------------------- |
@@ -183,4 +183,4 @@ None of these provide reliable _bacterial vs viral_ labels at scale, which is th
 
 ---
 
-Next: turning data into models → [Chapter 9](09-training-pipeline.md)
+Next: **Chapter 14 — The training pipeline: from images to models** → [14-training-pipeline.md](14-training-pipeline.md)

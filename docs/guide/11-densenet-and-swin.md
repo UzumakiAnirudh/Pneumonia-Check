@@ -1,6 +1,6 @@
-# Chapter 6 — DenseNet121 and Swin Transformer, from zero to mastery
+# Chapter 11 — DenseNet121 and Swin Transformer, from zero to mastery
 
-[← Chapter 5](05-deep-learning-fundamentals.md) · [README](../../README.md) · Next: [Chapter 7 →](07-explainability-gradcam.md)
+[← Chapter 10](10-deep-learning-fundamentals.md) · [README](../../README.md) · Next: [Chapter 12 →](12-explainability-gradcam.md)
 
 We compare two very different ways of "seeing": a **convolutional network** (DenseNet121, 2017) and a
 **vision transformer** (Swin-Tiny, 2021). Both are created in one line with the `timm` library
@@ -13,7 +13,7 @@ All shapes below were measured on the real models; you can reproduce them with t
 
 ## Part 1 — DenseNet121
 
-### 6.1 The problem it solves
+### 11.1 The problem it solves
 
 Very deep CNNs used to be hard to train: gradients shrank as they travelled back through many layers
 ("vanishing gradients"). **ResNet** (2015) added _shortcuts_ that **add** a layer's input to its output.
@@ -29,14 +29,14 @@ x₃ = H₃([x₀, x₁, x₂])          [ ... ] = stack along the channel dimen
 Benefits: features are **reused** (no need to re-learn them), every layer has a short path to the loss
 (strong gradients), and the network needs **fewer parameters** for the same accuracy.
 
-### 6.2 The building blocks
+### 11.2 The building blocks
 
 - **Growth rate k = 32** — each layer adds just 32 new channels to the "collective knowledge".
 - **Dense layer H** (a "bottleneck"): `BN → ReLU → 1×1 conv (to 4k = 128 channels) → BN → ReLU → 3×3 conv (to k = 32)`.
   The 1×1 conv cheaply squeezes the growing input before the expensive 3×3 conv.
 - **Transition layer** (between blocks): `BN → ReLU → 1×1 conv (halves the channels, "compression" θ = 0.5) → 2×2 average pool (halves width and height)`.
 
-### 6.3 The whole network, layer by layer (input 224 × 224)
+### 11.3 The whole network, layer by layer (input 224 × 224)
 
 | Stage             | Operation                             | Output (channels × H × W)          |
 | ----------------- | ------------------------------------- | ---------------------------------- |
@@ -61,7 +61,7 @@ Benefits: features are **reused** (no need to re-learn them), every layer has a 
 positions summarises a 32 × 32-pixel region of the input, with a receptive field covering most of the
 image.
 
-### 6.4 Strengths and weaknesses for X-rays
+### 11.4 Strengths and weaknesses for X-rays
 
 | ✔ Strengths                                                                                       | ✘ Weaknesses                                                                              |
 | ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
@@ -73,7 +73,7 @@ image.
 
 ## Part 2 — Swin Transformer (Tiny)
 
-### 6.5 From words to pictures: attention
+### 11.5 From words to pictures: attention
 
 Transformers came from language. Their core operation, **self-attention**, lets every element of a
 sequence look at every other element and decide how much to pay attention to it.
@@ -99,7 +99,7 @@ them.
 patches. Two problems: cost grows with the **square** of the number of patches, and there is only one
 scale — bad for high-resolution, multi-scale images like X-rays.
 
-### 6.6 Swin's two ideas
+### 11.6 Swin's two ideas
 
 **1. Hierarchy (like a CNN).** Start with small 4×4 patches; after each stage, **patch merging** groups
 every 2×2 neighbouring tokens (concatenates their 4 vectors → 4C), then a linear layer reduces to 2C.
@@ -123,13 +123,13 @@ Block 2k:    W-MSA   — regular windows          ┌──┬──┐
 Block 2k+1:  SW-MSA  — windows shifted by 3     │ ┼ │   ← crosses old borders
 ```
 
-### 6.7 Relative position bias
+### 11.7 Relative position bias
 
 Attention by itself ignores _where_ tokens are. Swin adds a learned bias **B** that depends only on the
 _relative_ offset between two tokens in a window (−6…+6 in each direction → a 13 × 13 table per head).
 "The token two to my left" has the same bias everywhere in the image — a built-in notion of geometry.
 
-### 6.8 One Swin block
+### 11.8 One Swin block
 
 ```
 x = x + (S)W-MSA( LayerNorm(x) )          ← attention, with a residual (skip) connection
@@ -139,7 +139,7 @@ x = x + MLP( LayerNorm(x) )               ← MLP = Linear(C→4C) → GELU → 
 **LayerNorm** normalises each token's vector (the transformer counterpart of BatchNorm). Residual
 connections, as in ResNet, keep gradients healthy.
 
-### 6.9 The whole network (Swin-T, input 224 × 224)
+### 11.9 The whole network (Swin-T, input 224 × 224)
 
 | Stage       | What happens                                | Tokens (H × W)                    | Channels | Blocks | Heads |
 | ----------- | ------------------------------------------- | --------------------------------- | -------- | ------ | ----- |
@@ -156,13 +156,13 @@ connections, as in ResNet, keep gradients healthy.
 Note the shapes at the end match DenseNet's spatial grid (7 × 7) — which is why Grad-CAM produces a
 7 × 7 map for both, upsampled onto the X-ray.
 
-### 6.10 Strengths and weaknesses for X-rays
+### 11.10 Strengths and weaknesses for X-rays
 
-| ✔ Strengths                                                                        | ✘ Weaknesses                                                             |
-| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| Attention can relate distant regions (both lungs) within one layer at later stages | Needs more data to train well; we rely heavily on ImageNet pretraining   |
-| Best scores in our Stage 1 test (AUC 0.999, specificity 99.1%)                     | Its Grad-CAM is blockier and often spreads outside the lungs (Chapter 7) |
-| Hierarchical features like a CNN — strong all-round backbone                       | 4× more parameters and memory than DenseNet121                           |
+| ✔ Strengths                                                                        | ✘ Weaknesses                                                              |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| Attention can relate distant regions (both lungs) within one layer at later stages | Needs more data to train well; we rely heavily on ImageNet pretraining    |
+| Best scores in our Stage 1 test (AUC 0.999, specificity 99.1%)                     | Its Grad-CAM is blockier and often spreads outside the lungs (Chapter 12) |
+| Hierarchical features like a CNN — strong all-round backbone                       | 4× more parameters and memory than DenseNet121                            |
 
 ---
 
@@ -183,7 +183,7 @@ Note the shapes at the end match DenseNet's spatial grid (7 × 7) — which is w
 Both were trained with **identical** settings (same data, augmentation, optimiser, learning rate,
 epochs) so the comparison is fair — a requirement for any scientific claim that one is better.
 
-## 6.11 See it yourself (exercise)
+## 11.11 See it yourself (exercise)
 
 With the full backend installed (`pip install -r backend/requirements.txt`), run from `backend/`:
 
@@ -204,7 +204,7 @@ for i, stage in enumerate(s.layers):
 Try: change the input to 448 × 448 — what happens to every shape? (DenseNet: all spatial sizes
 double. Swin: also double; the 7 × 7 windows stay 7 × 7 but there are 4× as many.)
 
-## 6.12 How to go further
+## 11.12 How to go further
 
 1. Read the papers (both are readable): Huang et al., _Densely Connected Convolutional Networks_
    (CVPR 2017); Liu et al., _Swin Transformer: Hierarchical Vision Transformer using Shifted Windows_
@@ -214,8 +214,8 @@ double. Swin: also double; the 7 × 7 windows stay 7 × 7 but there are 4× as m
    and check your output shapes against the tables above.
 3. Swap in another `timm` model (e.g. `convnext_tiny`, `efficientnet_b0`) — add an entry to `ARCHS`
    in `backend/app/models/specs.py`, choose its Grad-CAM target layer, and train with the same
-   settings (Chapter 9). Compare fairly on the same test set and external set.
+   settings (Chapter 14). Compare fairly on the same test set and external set.
 
 ---
 
-Next: how the heatmaps are computed → [Chapter 7](07-explainability-gradcam.md)
+Next: **Chapter 12 — Explainability: how the heatmaps work** → [12-explainability-gradcam.md](12-explainability-gradcam.md)

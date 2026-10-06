@@ -1,13 +1,16 @@
-# Chapter 9 — The training pipeline: from images to models
+# Chapter 14 — The training pipeline: from images to models
 
-[← Chapter 8](08-data.md) · [README](../../README.md) · Next: [Chapter 10 →](10-backend-walkthrough.md)
+[← Chapter 13](13-data.md) · [README](../../README.md) · Next: [Chapter 15 →](15-train-from-scratch-step-by-step.md)
+
+This chapter is the **reference** for every training script. For a click-by-click, command-by-command
+walkthrough with expected outputs, see [Chapter 15](15-train-from-scratch-step-by-step.md).
 
 This chapter takes you from downloaded images to the exact model files the app uses, one script at a
-time. You need the data from [Chapter 8](08-data.md).
+time. You need the data from [Chapter 13](13-data.md).
 
 ---
 
-## 9.1 Hardware: where to train
+## 14.1 Hardware: where to train
 
 | Option                           | Speed                       | Cost | Notes                                                                                      |
 | -------------------------------- | --------------------------- | ---- | ------------------------------------------------------------------------------------------ |
@@ -18,7 +21,7 @@ time. You need the data from [Chapter 8](08-data.md).
 
 Our reference run on an Apple M4: ~1.5–2 hours for all four models plus evaluation.
 
-## 9.2 Set up the training environment
+## 14.2 Set up the training environment
 
 Training uses the **full** backend libraries (PyTorch etc.) because it imports the backend's
 preprocessing and model code:
@@ -34,7 +37,7 @@ pip install -r requirements.txt                           # + pandas, matplotlib
 On Linux/Windows without a GPU, a much smaller CPU-only PyTorch can be installed first with
 `pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu`.
 
-## 9.3 The whole pipeline in one command
+## 14.3 The whole pipeline in one command
 
 ```bash
 cd training
@@ -52,7 +55,7 @@ example-image export and ONNX export. Results land directly in `backend/weights/
 
 The rest of this chapter explains each step so you can run, change and understand it.
 
-## 9.4 Step 1 — `train.py`: teaching one model
+## 14.4 Step 1 — `train.py`: teaching one model
 
 ```bash
 python train.py --arch densenet --task stage1 --cache --workers 0 --epochs 10 --patience 4 --warmup-epochs 0.5
@@ -105,20 +108,20 @@ Repeat for all four: `densenet stage1`, `densenet stage2`, `swin stage1`, `swin 
 
 **How to read the epoch lines:** training accuracy should rise steadily _together_ with validation
 accuracy. If training accuracy stalls near chance while validation looks fine, something is wrong in the
-training data path — see the two real bugs we found in [Chapter 15](15-results-and-lessons.md).
+training data path — see the two real bugs we found in [Chapter 22](22-results-and-lessons.md).
 
-## 9.5 Step 2 — `calibrate.py`: honest confidence
+## 14.5 Step 2 — `calibrate.py`: honest confidence
 
 ```bash
 python calibrate.py --all --cache --workers 0
 ```
 
 For each model, collects validation-set logits and finds the temperature _T_ that minimises the
-cross-entropy (Chapter 5.13). Prints e.g. `densenet_stage2: T = 2.1501 | ECE 0.1244 -> 0.0239` and writes
+cross-entropy (Chapter 10.13). Prints e.g. `densenet_stage2: T = 2.1501 | ECE 0.1244 -> 0.0239` and writes
 `backend/weights/temperature.json`. (If the validation set is tiny or perfectly separated, _T_ is
 clamped to 0.05–20 and a warning is shown.)
 
-## 9.6 Step 3 — `evaluate.py`: the final exam
+## 14.6 Step 3 — `evaluate.py`: the final exam
 
 ```bash
 python evaluate.py --cache --workers 0
@@ -132,7 +135,7 @@ and adults — repeats everything **per population**. Writes:
 - `backend/metrics/metrics.json` → the Performance dashboard;
 - `training/outputs/figures/*.png` → ROC, confusion-matrix and calibration plots for your report.
 
-## 9.7 Step 4 — `external_validate.py`: a hospital the model never saw
+## 14.7 Step 4 — `external_validate.py`: a hospital the model never saw
 
 ```bash
 python external_validate.py --name "Actualmed (unseen hospital, adults)" \
@@ -143,7 +146,7 @@ Stage 1 only (external sets rarely have bacterial/viral labels). Reports the met
 versus the internal test set, shown in the dashboard's _External Validation_ tab. It also accepts the
 RSNA challenge format (`--rsna-labels`, `--rsna-images`) if you download it from Kaggle.
 
-## 9.8 Step 5 — `gradcam_analysis.py`: looking inside
+## 14.8 Step 5 — `gradcam_analysis.py`: looking inside
 
 ```bash
 python gradcam_analysis.py --arch densenet --per-category 6 --max-images 400
@@ -154,21 +157,21 @@ Computes Grad-CAM for up to 400 test images, measures in-lung attention, sorts c
 misclassified / failure, saves gallery images to `backend/metrics/gallery/` and a summary to
 `training/outputs/gradcam_summary_<arch>.json`.
 
-## 9.9 Step 6 — exports for the app
+## 14.9 Step 6 — exports for the app
 
 ```bash
 python export_samples.py         # 6 example X-rays from the TEST split → backend/samples/
 python export_onnx.py --verify   # .onnx copies of the 4 models → backend/weights/
 ```
 
-`export_onnx.py` builds the "logits + Grad-CAM" graph described in Chapter 7.4, checks it against
+`export_onnx.py` builds the "logits + Grad-CAM" graph described in Chapter 12.4, checks it against
 PyTorch with `--verify`, and stores Swin's matrix weights in 8 bits (per-channel, unsigned) so each
 file is under GitHub's 100 MB limit and the online server fits in 512 MB of memory — with 99%+ of
 predictions identical and the same AUC. Use `--fp32` to skip the 8-bit step.
 
-## 9.10 Training on Google Colab (free GPU)
+## 14.10 Training on Google Colab (free GPU)
 
-1. Push the project to your GitHub (Chapter 13) or upload it as a zip.
+1. Push the project to your GitHub (Chapter 20) or upload it as a zip.
 2. Open https://colab.research.google.com → _File → Upload notebook_ → `training/notebooks/train_colab.ipynb`.
 3. _Runtime → Change runtime type → GPU_.
 4. Edit the first code cell's `REPO_URL`, then run the cells in order (_Runtime → Run all_). The notebook
@@ -177,12 +180,12 @@ predictions identical and the same AUC. Use `--fp32` to skip the 8-bit step.
 5. `evaluate_colab.ipynb` runs evaluation, Grad-CAM and optional external validation the same way.
 6. Unzip the downloaded weights into `backend/weights/`, then run `python export_onnx.py` locally.
 
-## 9.11 Comparing versions safely
+## 14.11 Comparing versions safely
 
 If you retrain with different data or settings, **do not simply replace the old models**. Use
 `compare_versions.py`: it compares the new and old models on the **same** test images — the pediatric
 test set and the unseen-hospital set — and accepts the new version only if its AUC is not worse
-anywhere. We learned why the hard way ([Chapter 15](15-results-and-lessons.md)).
+anywhere. We learned why the hard way ([Chapter 22](22-results-and-lessons.md)).
 
 For the adult experiment:
 
@@ -192,16 +195,16 @@ python prepare_adult.py                    # → data/splits_combined.csv, data/
 bash run_pipeline.sh --epochs 10 --patience 4 --warmup-epochs 0.5    # uses splits_combined.csv
 ```
 
-## 9.12 Other scripts
+## 14.12 Other scripts
 
 | Script                  | Purpose                                                                                                                       |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `train_validator.py`    | Train a MobileNetV3 "is this a chest X-ray?" classifier from `data/validator/{cxr,other}` (Chapter 8.7)                       |
+| `train_validator.py`    | Train a MobileNetV3 "is this a chest X-ray?" classifier from `data/validator/{cxr,other}` (Chapter 13.7)                      |
 | `watch_and_activate.py` | Follow a running pipeline, show live progress in the app, and switch to new models only if `compare_versions.py` accepts them |
 | `_common.py`            | Shared helpers: device selection, loading models, collecting logits                                                           |
 | `dataset.py`            | The PyTorch dataset: loading, the on-disk cache, augmentation                                                                 |
 
-## 9.13 Reproducibility
+## 14.13 Reproducibility
 
 Seeds are fixed (`--seed 42`), the split is deterministic, and every hyper-parameter is saved next to
 the weights. Results can still differ slightly between machines (GPU arithmetic is not perfectly
@@ -209,4 +212,4 @@ deterministic) — expect test AUCs within about ±0.005 of ours.
 
 ---
 
-Next: how the backend code works → [Chapter 10](10-backend-walkthrough.md)
+Next: **Chapter 15 — Train the models from scratch, step by step** → [15-train-from-scratch-step-by-step.md](15-train-from-scratch-step-by-step.md)

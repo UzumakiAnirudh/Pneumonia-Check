@@ -1,6 +1,6 @@
-# Chapter 17 — Glossary
+# Chapter 24 — Glossary
 
-[← Chapter 16](16-troubleshooting-faq.md) · [README](../../README.md)
+[← Chapter 23](23-troubleshooting-faq.md) · [README](../../README.md)
 
 Every technical term used in this guide, in alphabetical order.
 
@@ -9,17 +9,18 @@ Every technical term used in this guide, in alphabetical order.
 | **Accuracy**                    | Share of all predictions that are correct                                                                           |
 | **Activation function**         | A non-linear function applied after a weighted sum (ReLU, GELU) so networks can learn complex patterns              |
 | **AdamW**                       | An optimiser that adapts each weight's step size and applies weight decay                                           |
-| **API**                         | The set of URLs a server offers for programs to call                                                                |
 | **AP / PA view**                | Frontal chest X-ray taken front-to-back (AP) or back-to-front (PA)                                                  |
+| **API**                         | The set of URLs a server offers for programs to call                                                                |
 | **Arg-max**                     | The class with the highest score                                                                                    |
 | **Attention (self-attention)**  | Each token weighs every other token by similarity (queries·keys) and averages their values                          |
-| **Augmentation**                | Random changes to training images (rotate, zoom, brightness) so the model generalises                               |
 | **AUC (ROC-AUC)**               | Area under the ROC curve; 1 = perfect ranking, 0.5 = coin flip                                                      |
+| **Augmentation**                | Random changes to training images (rotate, zoom, brightness) so the model generalises                               |
 | **Backend**                     | The server-side program (here FastAPI in `backend/`)                                                                |
 | **Backpropagation**             | Algorithm that computes all gradients from the loss backwards through the network                                   |
 | **Batch**                       | A group of images processed together (32 here)                                                                      |
 | **Batch Normalization (BN)**    | Rescales channel activations to a stable range during training                                                      |
 | **Bilateral**                   | Affecting both lungs                                                                                                |
+| **Blueprint (Render)**          | Render's deployment-from-a-file feature, reading `render.yaml`                                                      |
 | **Calibration**                 | Whether predicted confidences match real accuracy                                                                   |
 | **Channel**                     | One layer of an image or feature map (RGB has 3)                                                                    |
 | **CLAHE**                       | Contrast Limited Adaptive Histogram Equalisation — local contrast enhancement                                       |
@@ -29,6 +30,7 @@ Every technical term used in this guide, in alphabetical order.
 | **Commit**                      | A saved snapshot in Git history                                                                                     |
 | **Confusion matrix**            | Table of true vs predicted classes (TP, TN, FP, FN)                                                                 |
 | **Consolidation**               | Lung tissue filled with fluid/pus, appearing white on X-ray — typical of bacterial pneumonia                        |
+| **Container**                   | A running, isolated instance of a Docker image (Chapter 19)                                                         |
 | **Convex hull**                 | The smallest shape without dents that encloses a set of points                                                      |
 | **Convolution**                 | Sliding a small filter over an image computing weighted sums                                                        |
 | **Cookie**                      | Small data the browser stores and sends back to the same site; holds the login session                              |
@@ -37,8 +39,16 @@ Every technical term used in this guide, in alphabetical order.
 | **CSRF**                        | Attack where another site tricks your browser into sending a request with your cookies; blocked by SameSite cookies |
 | **CSV**                         | A table stored as text with comma-separated values                                                                  |
 | **Data leakage**                | Test information sneaking into training (e.g. the same patient in both)                                             |
-| **Dense block / DenseNet**      | Layers that receive all previous layers' outputs concatenated (Chapter 6)                                           |
+| **Decorator**                   | A line starting with `@` that wraps a function or class (e.g. `@app.get` in FastAPI)                                |
+| **Dense block / DenseNet**      | Layers that receive all previous layers' outputs concatenated (Chapter 11)                                          |
+| **Dependency (FastAPI)**        | A function FastAPI runs before an endpoint (e.g. the login check)                                                   |
 | **DICOM**                       | Standard medical image format, includes patient metadata                                                            |
+| **DNS**                         | The internet's phone book: turns domain names into IP addresses                                                     |
+| **Docker**                      | Tool that packages a program with everything it needs into portable images (Chapter 19)                             |
+| **Docker Compose**              | A YAML file and command that run several containers together                                                        |
+| **Dockerfile**                  | Step-by-step instructions for building a Docker image                                                               |
+| **DOM**                         | The browser's live tree of page elements that JavaScript can change                                                 |
+| **Domain**                      | A human-readable address such as `pneumonia-verify.vercel.app`                                                      |
 | **Domain shift**                | New data differs from training data (hospital, machine, age)                                                        |
 | **Early stopping**              | Stop training when the validation score stops improving                                                             |
 | **ECE**                         | Expected Calibration Error — average gap between confidence and accuracy                                            |
@@ -48,25 +58,30 @@ Every technical term used in this guide, in alphabetical order.
 | **External validation**         | Testing on data from a different source than training                                                               |
 | **F1-score**                    | Harmonic mean of precision and recall                                                                               |
 | **False negative / positive**   | Missed disease / false alarm                                                                                        |
-| **FastAPI**                     | Python framework for building APIs                                                                                  |
+| **FastAPI**                     | Python framework for building APIs (Chapter 8)                                                                      |
 | **Feature map**                 | The output of one filter over an image                                                                              |
 | **Fine-tuning**                 | Continuing to train a pretrained network on new data                                                                |
+| **Fork**                        | Your own copy of someone else's GitHub repository                                                                   |
 | **Frontend**                    | The part that runs in the browser (React in `frontend/`)                                                            |
 | **GAP**                         | Global average pooling — average each feature map to one number                                                     |
 | **GELU**                        | A smooth activation function used in transformers                                                                   |
 | **Git / GitHub**                | Version-control tool / website hosting Git repositories                                                             |
 | **Gradient**                    | How much and in which direction the loss changes when a weight changes                                              |
 | **Gradient descent**            | Repeatedly moving weights against the gradient to reduce the loss                                                   |
-| **Grad-CAM**                    | Heatmap of the regions that increased the predicted class score (Chapter 7)                                         |
+| **Grad-CAM**                    | Heatmap of the regions that increased the predicted class score (Chapter 12)                                        |
 | **Hash (password hash)**        | One-way scramble of a password; PBKDF2 here                                                                         |
 | **Heatmap**                     | Colour overlay showing where the model looked (blue low → red high)                                                 |
 | **Hook (React)**                | A `use...` function that adds state or effects to a component                                                       |
+| **HTML / CSS**                  | The languages for a page's content / its appearance (Chapter 4)                                                     |
 | **HTTP / HTTPS**                | The web's request/response protocol / its encrypted version                                                         |
 | **httpOnly**                    | Cookie flag: page scripts cannot read it                                                                            |
 | **Hyper-parameter**             | A setting chosen by people, not learned (learning rate, batch size)                                                 |
+| **IDOR**                        | Accessing someone else's data by changing an ID; prevented by checking ownership                                    |
+| **Image (Docker)**              | A frozen package of OS base, libraries, code and start command                                                      |
 | **ImageNet**                    | 1.2 million labelled photos used to pretrain the networks                                                           |
 | **Inference**                   | Using a trained model to make predictions                                                                           |
 | **Interstitial**                | Pattern of fine lines/haze between air spaces — typical of viral pneumonia                                          |
+| **JavaScript / TypeScript**     | The language of web pages / JavaScript with types (Chapter 5)                                                       |
 | **JSON**                        | Text format for structured data                                                                                     |
 | **JSX / TSX**                   | HTML-like syntax inside JavaScript/TypeScript for React                                                             |
 | **Label**                       | The correct answer for a training example                                                                           |
@@ -80,6 +95,7 @@ Every technical term used in this guide, in alphabetical order.
 | **MPS**                         | Apple's GPU backend for PyTorch on M-series Macs                                                                    |
 | **Multi-head attention**        | Several attention computations in parallel                                                                          |
 | **Neural network**              | A function made of layers of weighted sums and activations, learned from data                                       |
+| **nginx**                       | A fast web server; serves the website and forwards `/api` in the Docker setup                                       |
 | **Normalisation (images)**      | Subtracting a mean and dividing by a standard deviation                                                             |
 | **npm**                         | Package manager for JavaScript                                                                                      |
 | **ONNX / ONNX Runtime**         | Portable model file format / a light engine that runs it without PyTorch                                            |
@@ -90,21 +106,25 @@ Every technical term used in this guide, in alphabetical order.
 | **Patch merging**               | Swin's downsampling: join 2×2 neighbouring tokens                                                                   |
 | **Path**                        | The address of a file or folder                                                                                     |
 | **PBKDF2**                      | Slow, salted password-hashing algorithm                                                                             |
-| **Pip**                         | Python package installer                                                                                            |
+| **pip**                         | Python package installer                                                                                            |
 | **Pooling**                     | Shrinking a feature map by taking max/average of small blocks                                                       |
 | **Port**                        | A numbered "door" a server listens on (8000, 5173)                                                                  |
 | **Precision**                   | Of predicted positives, the share that are truly positive                                                           |
 | **Preprocessing**               | Preparing images before the model (grayscale, resize, CLAHE, normalise)                                             |
 | **Pretrained**                  | Already trained on another dataset (ImageNet)                                                                       |
+| **Promise**                     | A JavaScript value that will be available later (e.g. a server response)                                            |
+| **Props**                       | Inputs passed into a React component                                                                                |
 | **Pydantic**                    | Python library for validating data shapes                                                                           |
+| **Python**                      | The language of the backend and the AI code (Chapter 7)                                                             |
 | **Quantization**                | Storing weights with fewer bits (8 instead of 32) to save memory                                                    |
 | **Radiological convention**     | Patient's right appears on the image's left                                                                         |
-| **React**                       | JavaScript library for building interfaces from components                                                          |
+| **React**                       | JavaScript library for building interfaces from components (Chapter 6)                                              |
 | **Receptive field**             | The part of the input image one neuron can "see"                                                                    |
 | **Recall / Sensitivity**        | Of the truly sick, the share detected                                                                               |
 | **ReLU**                        | max(0, x)                                                                                                           |
 | **Repository (repo)**           | A project tracked by Git                                                                                            |
 | **Residual connection**         | Adding a layer's input to its output (skip connection)                                                              |
+| **Reverse proxy**               | A server that forwards requests to another server (Vercel rewrites, nginx, Vite proxy)                              |
 | **ROC curve**                   | Sensitivity vs 1 − specificity across all thresholds                                                                |
 | **Route**                       | A URL handled by the server or by React's router                                                                    |
 | **Salt**                        | Random data mixed into a password before hashing                                                                    |
@@ -115,24 +135,26 @@ Every technical term used in this guide, in alphabetical order.
 | **Softmax**                     | Turns scores into probabilities that sum to 1                                                                       |
 | **Specificity**                 | Of the truly healthy, the share correctly cleared                                                                   |
 | **SQL / SQLite / PostgreSQL**   | Database query language / a single-file database / a server database                                                |
+| **SQL injection**               | An attack that sneaks database commands into input; prevented with parameterised queries                            |
 | **State**                       | Data in an app that changes over time                                                                               |
 | **Stride**                      | How far a filter moves at each step                                                                                 |
-| **Swin Transformer**            | Hierarchical vision transformer with shifted-window attention (Chapter 6)                                           |
+| **Swin Transformer**            | Hierarchical vision transformer with shifted-window attention (Chapter 11)                                          |
 | **Tailwind CSS**                | Styling with small utility class names                                                                              |
 | **Temperature scaling**         | Dividing logits by T to calibrate confidence                                                                        |
 | **Tensor**                      | A multi-dimensional array of numbers                                                                                |
 | **Terminal**                    | Text window for typing commands                                                                                     |
 | **Test set**                    | Data used only for the final score                                                                                  |
 | **timm**                        | Library of ready-made image model architectures                                                                     |
+| **TLS / certificate**           | Encryption for HTTPS and the proof of a server's identity (the padlock)                                             |
 | **Token**                       | One element in a transformer's sequence (an image patch here)                                                       |
 | **Transfer learning**           | Reusing a model trained on one task for another                                                                     |
 | **Transition layer**            | DenseNet's layer that shrinks channels and image size between blocks                                                |
-| **TypeScript**                  | JavaScript with types                                                                                               |
 | **Uvicorn**                     | The program that runs a FastAPI app on a port                                                                       |
 | **Validation set**              | Data used to choose epochs and calibrate — not for the final score                                                  |
 | **Virtual environment (.venv)** | A private folder of Python libraries for one project                                                                |
 | **Vision Transformer (ViT)**    | Transformer applied to image patches                                                                                |
 | **Vite**                        | Fast development server and build tool for the website                                                              |
+| **Volume**                      | Docker storage that survives when a container is deleted                                                            |
 | **Weight decay**                | Gently pulling weights towards zero to reduce overfitting                                                           |
 | **Window attention**            | Attention computed only inside small windows (7×7 tokens)                                                           |
 

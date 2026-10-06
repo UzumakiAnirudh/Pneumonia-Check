@@ -1,9 +1,9 @@
 # Chapter 3 — How the whole system works
 
-[← Chapter 2](02-install-and-run.md) · [README](../../README.md) · Next: [Chapter 4 →](04-programming-basics.md)
+[← Chapter 2](02-install-and-run.md) · [README](../../README.md) · Next: [Chapter 4 →](04-html-css-basics.md)
 
 This chapter follows **one X-ray** from your mouse click to the result on screen, naming the exact
-file that does each step. Don't worry if some words are new — Chapters 4–7 explain each idea in depth.
+file that does each step. Don't worry if some words are new — Chapters 4–12 explain each idea in depth.
 
 ---
 
@@ -17,7 +17,7 @@ file that does each step. Don't worry if some words are new — Chapters 4–7 e
 
 The frontend and backend talk over **HTTP**, the same language your browser uses for every website.
 The frontend sends a _request_ ("here is an image, analyse it"); the backend sends back a
-_response_ in **JSON** (structured text — Chapter 4).
+_response_ in **JSON** (structured text — Chapter 9).
 
 ## 3.2 The journey of one X-ray
 
@@ -99,7 +99,7 @@ flowchart LR
 
 Training produces files that the backend simply **loads**: model weights (`backend/weights/*.pth`
 or `*.onnx`), each model's preprocessing settings (`*.json`), the temperatures, and the dashboard
-data (`backend/metrics/metrics.json` + gallery images). Chapter 9 covers each script.
+data (`backend/metrics/metrics.json` + gallery images). Chapter 14 covers each script.
 
 ## 3.4 Every folder, explained
 
@@ -168,7 +168,7 @@ Pneumonia-Check/
 
 - **Two programs instead of one:** the AI needs Python libraries (PyTorch/ONNX, OpenCV) that cannot
   run in a browser; the interface is best built with web tools. Splitting them also lets each be
-  hosted where it is cheapest (Chapter 13).
+  hosted where it is cheapest (Chapter 20).
 - **One preprocessing module shared by training and serving:** the #1 cause of AI apps behaving
   differently in production than in testing is preprocessing that differs. Training imports
   `backend/app/services/preprocessing.py` directly, so it cannot drift.
@@ -181,4 +181,4 @@ Pneumonia-Check/
 
 ---
 
-Next: the programming ideas behind all of this → [Chapter 4](04-programming-basics.md)
+Next: **Chapter 4 — HTML & CSS from zero** → [04-html-css-basics.md](04-html-css-basics.md)

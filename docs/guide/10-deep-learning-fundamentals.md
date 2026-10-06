@@ -1,13 +1,13 @@
-# Chapter 5 — Deep learning from zero
+# Chapter 10 — Deep learning from zero
 
-[← Chapter 4](04-programming-basics.md) · [README](../../README.md) · Next: [Chapter 6 →](06-densenet-and-swin.md)
+[← Chapter 9](09-web-apis-databases-security.md) · [README](../../README.md) · Next: [Chapter 11 →](11-densenet-and-swin.md)
 
 No maths beyond school level is assumed. Every formula is followed by a plain-English reading and,
 where useful, a worked example.
 
 ---
 
-## 5.1 What "machine learning" means
+## 10.1 What "machine learning" means
 
 Ordinary programming: a human writes the rules ("if the lower lung is white, say pneumonia").
 **Machine learning:** we show the computer thousands of **examples with answers** (X-ray → "Normal",
@@ -18,7 +18,7 @@ A **neural network** is a particular kind of adjustable function made of many si
 layers. **Deep learning** = neural networks with many layers. Our networks have ~7 million (DenseNet121)
 and ~27.5 million (Swin-T) adjustable numbers, called **parameters** or **weights**.
 
-## 5.2 An image is just numbers
+## 10.2 An image is just numbers
 
 A grayscale X-ray is a grid of pixels; each pixel is a number from 0 (black) to 255 (white).
 A 224 × 224 image is 50,176 numbers. Colour images have 3 grids (red, green, blue) — **channels**.
@@ -34,7 +34,7 @@ originally built for colour photos.
 In code an image is a NumPy array of **shape** `(224, 224)`; a batch of 32 colour-format images for
 the network is a **tensor** of shape `(32, 3, 224, 224)` — (batch, channels, height, width).
 
-## 5.3 Preprocessing — making images comparable
+## 10.3 Preprocessing — making images comparable
 
 Before the network sees an image (`backend/app/services/preprocessing.py`):
 
@@ -52,7 +52,7 @@ Before the network sees an image (`backend/app/services/preprocessing.py`):
 The exact same steps run during training and in the app. If they differed even slightly, accuracy
 would silently drop — this is why training imports the backend's preprocessing module.
 
-## 5.4 A single neuron
+## 10.4 A single neuron
 
 A neuron takes inputs x₁…xₙ, multiplies each by a weight w, adds a bias b, and applies an
 **activation function**:
@@ -68,7 +68,7 @@ Without the activation, stacking layers would collapse into one big weighted sum
 is what lets deep networks represent complicated patterns. We use **ReLU** (DenseNet) and **GELU**
 (Swin, a smooth version of ReLU).
 
-## 5.5 From scores to probabilities — softmax
+## 10.5 From scores to probabilities — softmax
 
 The last layer outputs one raw score per class, called **logits**, e.g. Normal: 1.2, Pneumonia: 3.4.
 **Softmax** turns them into probabilities that add up to 1:
@@ -81,7 +81,7 @@ _Example:_ e^1.2 = 3.32, e^3.4 = 29.96 → P(Pneumonia) = 29.96 / 33.28 = **0.90
 
 The predicted class is the one with the highest probability (the **arg-max**).
 
-## 5.6 How a network learns
+## 10.6 How a network learns
 
 ### The loss — measuring "how wrong"
 
@@ -128,7 +128,7 @@ for each epoch:                         # one pass over all training images
 - **Gradient clipping** (max norm 5) — caps unusually large updates.
 - **Mixed precision** — on NVIDIA GPUs, computing in 16-bit floats where safe is ~2× faster.
 
-## 5.7 Train, validation, test — and why we split by patient
+## 10.7 Train, validation, test — and why we split by patient
 
 | Split          | Share | Used for                                                      |
 | -------------- | ----- | ------------------------------------------------------------- |
@@ -141,7 +141,7 @@ another in _test_, the model can recognise the _person_ rather than the disease 
 inflated. We therefore split **by patient** — all of a patient's images go to the same split
 (`training/prepare_data.py`).
 
-## 5.8 Overfitting and how we fight it
+## 10.8 Overfitting and how we fight it
 
 **Overfitting**: the model memorises the training images instead of learning general patterns — training
 accuracy keeps rising while validation accuracy stalls or falls.
@@ -156,7 +156,7 @@ Defences used here:
 - **Weight decay** (AdamW).
 - **Early stopping** — keep the epoch with the best validation AUC; stop if no improvement for several epochs.
 
-## 5.9 Convolutional neural networks (CNNs)
+## 10.9 Convolutional neural networks (CNNs)
 
 Connecting every pixel to every neuron would need billions of weights. A **convolution** instead
 slides a small **filter** (e.g. 3×3 numbers) across the image; at each position it computes a weighted
@@ -182,21 +182,21 @@ image patch      filter        result
 - **Global average pooling (GAP)** — at the end, average each feature map to one number, giving a
   vector (1024 numbers for DenseNet) that a final **linear layer** turns into class scores.
 
-## 5.10 Transfer learning
+## 10.10 Transfer learning
 
 Both networks first learned on **ImageNet** (1.2 million everyday photos, 1,000 classes). Their early
 layers already detect edges, textures and shapes — useful for X-rays too. We replace only the last layer
 with a new 2-class layer and **fine-tune** the whole network on X-rays. This needs far less data and
 time than learning from scratch, and generalises better.
 
-## 5.11 Class imbalance
+## 10.11 Class imbalance
 
 The children's dataset has about 2.7× more pneumonia than normal images. A lazy model could say
 "pneumonia" always and be 73% accurate. We use a **class-weighted loss**: mistakes on the rarer class
 cost more. Weight for class _c_ = total / (number of classes × count of _c_) — e.g. Normal 1.84,
 Pneumonia 0.69.
 
-## 5.12 Measuring performance — every metric explained
+## 10.12 Measuring performance — every metric explained
 
 A **confusion matrix** counts the four outcomes (positive = pneumonia):
 
@@ -225,7 +225,7 @@ For 3 classes, metrics are computed per class and averaged (**macro average**).
 For screening, **sensitivity matters most** (a missed pneumonia is worse than a false alarm), but very
 low specificity floods doctors with false alarms — both must be reported.
 
-## 5.13 Calibration — can we trust the percentages?
+## 10.13 Calibration — can we trust the percentages?
 
 A model is **calibrated** if, among all cases where it says "90%", about 90% are correct. Modern
 networks tend to be **over-confident**.
@@ -245,17 +245,17 @@ class wins, only the confidence. We find T by minimising cross-entropy on the **
 average |accuracy − confidence| weighted by bin size. Lower is better (0 = perfect). The dashboard's
 _reliability diagram_ plots accuracy against confidence; a perfectly calibrated model lies on the diagonal.
 
-## 5.14 Generalisation, domain shift and shortcut learning
+## 10.14 Generalisation, domain shift and shortcut learning
 
 A model is only proven on data like its test set. **Domain shift** = new data differs (different
 hospital, X-ray machine, patient ages). **Shortcut learning** = the model latches onto an accidental
 clue that happens to correlate with the label — e.g. "all normal images in my training set came from
 hospital A". It then looks brilliant on a test set with the same accident and fails elsewhere.
 
-We hit exactly this — the full story, with numbers, is in [Chapter 15](15-results-and-lessons.md).
+We hit exactly this — the full story, with numbers, is in [Chapter 22](22-results-and-lessons.md).
 The defence is **external validation**: test on a source the model never trained on, where the
 shortcut cannot work.
 
 ---
 
-Next: the two architectures in depth → [Chapter 6](06-densenet-and-swin.md)
+Next: **Chapter 11 — DenseNet121 and Swin Transformer, from zero to mastery** → [11-densenet-and-swin.md](11-densenet-and-swin.md)

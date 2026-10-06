@@ -193,12 +193,11 @@ Vercel shows. The `/api` forwarding keeps working because it lives in `vercel.js
 
 ## 20.12 Hosting elsewhere
 
-| Option                                            | Cost                   | How                                                                                                |
-| ------------------------------------------------- | ---------------------- | -------------------------------------------------------------------------------------------------- |
-| Hugging Face Space (Docker)                       | PRO subscription       | `bash deploy/huggingface/prepare_space.sh <cloned-space>` then push (kit in `deploy/huggingface/`) |
-| Any Linux VM (cloud server)                       | From a few $/month     | Docker Compose (Chapter 19.7) behind a reverse proxy with HTTPS                                    |
-| Render / Fly.io / Railway / Cloud Run with Docker | Paid tiers for >512 MB | Point the service at `backend/Dockerfile`                                                          |
-| University / hospital server                      | Varies                 | Chapter 2 setup + a process manager and HTTPS; ask IT about health-data rules                      |
+| Option                                            | Cost                   | How                                                                           |
+| ------------------------------------------------- | ---------------------- | ----------------------------------------------------------------------------- |
+| Any Linux VM (cloud server)                       | From a few $/month     | Docker Compose (Chapter 19.7) behind a reverse proxy with HTTPS               |
+| Render / Fly.io / Railway / Cloud Run with Docker | Paid tiers for >512 MB | Point the service at `backend/Dockerfile`                                     |
+| University / hospital server                      | Varies                 | Chapter 2 setup + a process manager and HTTPS; ask IT about health-data rules |
 
 **Moving accounts between databases:** with Postgres use `pg_dump` / `pg_restore`; the local SQLite file is
 `backend/data/history.db`.
@@ -212,7 +211,7 @@ Vercel shows. The `/api` forwarding keeps working because it lives in `vercel.js
 | `…onrender.com` → **Not Found**, header `x-render-routing: no-server` | No Render service with that name (or `render.yaml` not pushed)                                                       | Push, then create the Blueprint                                                      |
 | Vercel shows **Request Access**                                       | Deployment Protection on preview URLs                                                                                | Use the production URL or disable protection                                         |
 | Swin's confidence much lower online than locally                      | ONNX Runtime's fast 8-bit kernels on Intel/AMD servers saturate with _signed_ 8-bit weights (Apple chips unaffected) | Export Swin with **unsigned** per-channel 8-bit weights — `export_onnx.py`'s default |
-| Hugging Face: **402**, "Docker Spaces require PRO"                    | Hugging Face policy                                                                                                  | Use Render (free) or subscribe                                                       |
+| Hugging Face: **402**, "Docker Spaces require PRO"                    | Hugging Face policy                                                                                                  | Use Render (free) — what this project does                                           |
 | `git push` **403** to another account                                 | Saved credentials for a different GitHub user                                                                        | §20.3                                                                                |
 
 ## 20.14 Limits summary

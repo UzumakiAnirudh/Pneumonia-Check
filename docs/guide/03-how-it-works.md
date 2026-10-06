@@ -106,7 +106,7 @@ data (`backend/metrics/metrics.json` + gallery images). Chapter 14 covers each s
 ```
 Pneumonia-Check/
 ├── README.md                 Front page of this guide
-├── docs/guide/               This course (17 chapters)
+├── docs/guide/               This course (24 chapters)
 ├── vercel.json               How Vercel builds the website and forwards /api to the backend
 ├── render.yaml               How Render runs the backend for free
 ├── docker-compose.yml        Optional: run everything with Docker
@@ -145,23 +145,21 @@ Pneumonia-Check/
 │   ├── requirements*.txt     Python libraries (deploy = light, full = with PyTorch, dev = + tests)
 │   └── data/                 (created at runtime) history.db — accounts and history
 │
-├── training/                 TEACHING THE MODELS (Python + PyTorch)
-│   ├── download_data.py      Download every dataset from its source
-│   ├── prepare_data.py       Build the patient-grouped 70/15/15 split (children)
-│   ├── prepare_adult.py      Add adult datasets; build the unseen-hospital test
-│   ├── dataset.py            Load images + augmentation for training
-│   ├── train.py              Train one model (DenseNet or Swin, Stage 1/2/3-class)
-│   ├── calibrate.py          Learn temperature scaling
-│   ├── evaluate.py           Test-set metrics + figures
-│   ├── external_validate.py  Test on a dataset from another hospital
-│   ├── gradcam_analysis.py   Build the Grad-CAM gallery and attention statistics
-│   ├── export_onnx.py        Convert models to lightweight ONNX files
-│   ├── export_samples.py     Pick example X-rays for the app
-│   ├── compare_versions.py   Decide whether new models beat the current ones
-│   ├── run_pipeline.sh       Run all of the above in order
-│   └── notebooks/            Google Colab versions (free GPU)
-│
-└── deploy/huggingface/       An alternative (paid) hosting option
+└── training/                 TEACHING THE MODELS (Python + PyTorch)
+    ├── download_data.py      Download every dataset from its source
+    ├── prepare_data.py       Build the patient-grouped 70/15/15 split (children)
+    ├── prepare_adult.py      Add adult datasets; build the unseen-hospital test
+    ├── dataset.py            Load images + augmentation for training
+    ├── train.py              Train one model (DenseNet or Swin, Stage 1/2/3-class)
+    ├── calibrate.py          Learn temperature scaling
+    ├── evaluate.py           Test-set metrics + figures
+    ├── external_validate.py  Test on a dataset from another hospital
+    ├── gradcam_analysis.py   Build the Grad-CAM gallery and attention statistics
+    ├── export_onnx.py        Convert models to lightweight ONNX files
+    ├── export_samples.py     Pick example X-rays for the app
+    ├── compare_versions.py   Decide whether new models beat the current ones
+    ├── run_pipeline.sh       Run all of the above in order
+    └── notebooks/            Google Colab versions (free GPU)
 ```
 
 ## 3.5 Why it is built this way
